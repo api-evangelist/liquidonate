@@ -1,0 +1,39 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/liquidonate-magicmatch-openapi.yml, openapi/liquidonate-returnsdirect-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: liquidonateKey
+  type: apiKey
+  in: header
+  parameter: X-LiquiDonate-Key
+  description: Retailer API key issued by v1/setupRetailer. Prefixed `ld_`.
+  sources:
+  - openapi/liquidonate-magicmatch-openapi.yml
+- name: liquidonateSecret
+  type: apiKey
+  in: header
+  parameter: X-LiquiDonate-Secret
+  description: Retailer API secret issued by v1/setupRetailer. Prefixed `ld_sk_`.
+  sources:
+  - openapi/liquidonate-magicmatch-openapi.yml
+- name: shopDomain
+  type: apiKey
+  in: header
+  parameter: X-Shop-Domain
+  description: Your shop identifier, e.g. acme.com. Must match the value LiquiDonate has on
+    file.
+  sources:
+  - openapi/liquidonate-returnsdirect-openapi.yml
+- name: hmacSignature
+  type: apiKey
+  in: header
+  parameter: X-Signature
+  description: HMAC-SHA256 of the raw request body using the shared secret LiquiDonate provisions
+    for your shop, as lowercase hex.
+  sources:
+  - openapi/liquidonate-returnsdirect-openapi.yml
