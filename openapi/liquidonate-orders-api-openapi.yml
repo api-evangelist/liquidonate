@@ -1,0 +1,296 @@
+openapi: 3.1.0
+info:
+  title: MagicMatch by LiquiDonate Donate Orders API
+  version: 1.0.0
+  summary: 'Donation-as-a-Service: match returned or excess retail items to nearby nonprofits and buy the donation shipping label.'
+  description: 'MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.
+
+
+    **Choosing an endpoint**
+
+
+    - `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.
+
+    - `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.
+
+    - `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.
+
+    - `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.
+
+    - `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.
+
+    - `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.
+
+
+    **Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a "Damaged" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.
+
+
+    This description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.'
+  contact:
+    name: LiquiDonate
+    url: https://docs-magicmatch.liquidonate.com
+    email: sales@liquidonate.com
+  termsOfService: https://www.liquidonate.com/terms-of-service
+  x-source: https://docs-magicmatch.liquidonate.com
+  x-source-collection: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  x-generated-by: api-evangelist enrichment pipeline
+  x-generated: '2026-07-19'
+servers:
+- url: https://api.liquidonate.com
+  description: 'Production. Verified live: unauthenticated requests return 401 {"error":"invalid api key or secret"}.'
+security:
+- liquidonateKey: []
+  liquidonateSecret: []
+tags:
+- name: Orders
+  description: Push order data into ReturnsDirect.
+paths:
+  /webhooks/external-order:
+    post:
+      operationId: pushExternalOrder
+      summary: Push an order to ReturnsDirect
+      description: Sends order data to LiquiDonate whenever an order is created or updated in your system. LiquiDonate caches the order so the customer-facing return portal can resolve return eligibility without calling your API. Sign the raw body with HMAC-SHA256 and send the hex digest in `X-Signature`.
+      tags:
+      - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+            example:
+              externalId: order_99001
+              orderNumber: '#1001'
+              confirmationNumber: CONF-99001
+              orderDate: '2026-03-01T10:00:00Z'
+              customerName: Jane Smith
+              customerEmail: jane@example.com
+              customerPhone: +1-555-0100
+              shippingAddress1: 123 Main St
+              shippingAddress2: Apt 4B
+              shippingCity: Austin
+              shippingState: TX
+              shippingZip: '78701'
+              shippingCountry: US
+              shippingPhone: +1-555-0100
+              shippingLatitude: 30.2672
+              shippingLongitude: -97.7431
+              originalShippingFee: 9.99
+              shippingTaxAmount: 0.82
+              tags:
+              - vip
+              - spring-promo
+              transactions:
+              - id: txn_abc123
+                kind: sale
+                status: success
+                amount: 149.97
+                currency: USD
+                paymentMethod: visa
+                createdAt: '2026-03-01T10:01:00Z'
+              lineItems:
+              - externalLineItemId: li_001
+                externalFulfillmentLineItemId: fli_001
+                externalVariantId: var_blue_md
+                title: Classic T-Shirt
+                description: 100% cotton crew neck
+                sku: TSHIRT-BLUE-MD
+                imageUrl: https://cdn.acme.com/products/tshirt-blue.jpg
+                quantity: 2
+                pricePerUnit: 49.99
+                discountAmountPerUnit: 5.0
+                total: 89.98
+                weight: 0.3
+                weightUnit: KILOGRAMS
+                collectionIds:
+                - col_apparel
+                - col_summer
+                categoryTypes:
+                - clothing
+                tags:
+                - final-sale
+      responses:
+        '200':
+          description: Order stored.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  id:
+                    type: integer
+              example:
+                success: true
+                id: 42
+        '400':
+          description: 'Missing required fields, or missing signing headers. Verified live: a request without headers returns {"error":"Missing X-Shop-Domain or X-Signature header"}.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Missing required fields: externalId, orderNumber'
+        '401':
+          description: The HMAC signature did not verify.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Invalid signature
+components:
+  schemas:
+    Order:
+      type: object
+      description: An order in the canonical ReturnsDirect camelCase format. A retailer order API that already speaks this shape needs no custom mapper - the built-in default mapper is used automatically.
+      properties:
+        externalId:
+          type: string
+          description: Your order identifier.
+          example: order_99001
+        orderNumber:
+          type: string
+          example: '#1001'
+        confirmationNumber:
+          type: string
+          example: CONF-99001
+        orderDate:
+          type: string
+          format: date-time
+        customerName:
+          type: string
+        customerEmail:
+          type: string
+          format: email
+        customerPhone:
+          type: string
+        shippingAddress1:
+          type: string
+        shippingAddress2:
+          type: string
+        shippingCity:
+          type: string
+        shippingState:
+          type: string
+        shippingZip:
+          type: string
+        shippingCountry:
+          type: string
+        shippingPhone:
+          type: string
+        shippingLatitude:
+          type: number
+        shippingLongitude:
+          type: number
+        originalShippingFee:
+          type: number
+        shippingTaxAmount:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+        transactions:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: txn_abc123
+              kind:
+                type: string
+                example: sale
+              status:
+                type: string
+                example: success
+              amount:
+                type: number
+              currency:
+                type: string
+                example: USD
+              paymentMethod:
+                type: string
+                example: visa
+              createdAt:
+                type: string
+                format: date-time
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLineItem'
+      required:
+      - externalId
+      - orderNumber
+    OrderLineItem:
+      type: object
+      properties:
+        externalLineItemId:
+          type: string
+          example: li_001
+        externalFulfillmentLineItemId:
+          type: string
+          example: fli_001
+        externalVariantId:
+          type: string
+          example: var_blue_md
+        title:
+          type: string
+          example: Classic T-Shirt
+        description:
+          type: string
+        sku:
+          type: string
+          example: TSHIRT-BLUE-MD
+        imageUrl:
+          type: string
+          format: uri
+        quantity:
+          type: integer
+          example: 2
+        pricePerUnit:
+          type: number
+          example: 49.99
+        discountAmountPerUnit:
+          type: number
+          example: 5.0
+        total:
+          type: number
+          example: 89.98
+        weight:
+          type: number
+          example: 0.3
+        weightUnit:
+          type: string
+          example: KILOGRAMS
+        collectionIds:
+          type: array
+          items:
+            type: string
+        categoryTypes:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+    Error:
+      type: object
+      description: ReturnsDirect error envelope.
+      properties:
+        error:
+          type: string
+  securitySchemes:
+    liquidonateKey:
+      type: apiKey
+      in: header
+      name: X-LiquiDonate-Key
+      description: Retailer API key issued by v1/setupRetailer. Prefixed `ld_`.
+    liquidonateSecret:
+      type: apiKey
+      in: header
+      name: X-LiquiDonate-Secret
+      description: Retailer API secret issued by v1/setupRetailer. Prefixed `ld_sk_`.

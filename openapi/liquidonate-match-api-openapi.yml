@@ -1,0 +1,783 @@
+openapi: 3.1.0
+info:
+  title: MagicMatch by LiquiDonate Donate Match API
+  version: 1.0.0
+  summary: 'Donation-as-a-Service: match returned or excess retail items to nearby nonprofits and buy the donation shipping label.'
+  description: 'MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.
+
+
+    **Choosing an endpoint**
+
+
+    - `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.
+
+    - `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.
+
+    - `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.
+
+    - `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.
+
+    - `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.
+
+    - `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.
+
+
+    **Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a "Damaged" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.
+
+
+    This description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.'
+  contact:
+    name: LiquiDonate
+    url: https://docs-magicmatch.liquidonate.com
+    email: sales@liquidonate.com
+  termsOfService: https://www.liquidonate.com/terms-of-service
+  x-source: https://docs-magicmatch.liquidonate.com
+  x-source-collection: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  x-generated-by: api-evangelist enrichment pipeline
+  x-generated: '2026-07-19'
+servers:
+- url: https://api.liquidonate.com
+  description: 'Production. Verified live: unauthenticated requests return 401 {"error":"invalid api key or secret"}.'
+security:
+- liquidonateKey: []
+  liquidonateSecret: []
+tags:
+- name: Match
+  description: Match items to nonprofits.
+paths:
+  /v1/matchAndShip/estimate:
+    post:
+      operationId: estimateMatchAndShip
+      summary: Estimate a nonprofit match and shipping rate
+      description: Returns a nonprofit match and an estimated shipping rate without creating a shipment. Always pass the returned match UUID into v1/matchAndShip so the same nonprofit match and rate are used.
+      tags:
+      - Match
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchRequest'
+            example:
+              donor:
+                firstName: Test
+                lastName: ABV
+                email: hello@abc.com
+                contactNumber: '5555555555'
+              location:
+                address:
+                  streetAddress1: 190 Founders Prom
+                  city: Getzville
+                  state: NY
+                  zip: '14068'
+                  countryCode: US
+              parcel:
+                weight: 2.7
+              items:
+              - title: Original Bag - Ivory
+                sku: ABV001
+                description: ''
+                quantity: 1
+                categoryTypes:
+                - feminine
+                weightLbs: 2.5
+              - title: Stroller Straps - Ivory
+                sku: ABV332
+                description: ''
+                quantity: 1
+                categoryTypes:
+                - feminine
+                weightLbs: 0.18
+      responses:
+        '200':
+          description: Match and estimated rate.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchResponse'
+              example:
+                match:
+                  uuid: 0509dc14-dd2d-4e36-812b-52a4b2765255
+                  nonprofit:
+                    organizationName: Woodstock Area Counsel On Aging
+                    website: https://woodstockareacounselonaging.org
+                    address:
+                      streetAddress1: 149 New Montgomery St.
+                      streetAddress2: null
+                      city: San Francisco
+                      state: CA
+                      zip: '94105'
+                      countryCode: US
+                      latitude: 38.77497
+                      longitude: -122.431297
+                  distanceMiles: '0'
+                  items:
+                  - uuid: 6e781121-14ce-4fdd-86cf-918f6472adca
+                    title: MacBook Pro 13
+                    sku: '500'
+                    quantity: '3'
+                    weight: 4
+                  label:
+                    trackingNumber: '9405500110368049165575'
+                    carrier: USPS
+                    labelURL: https://easypost-files.s3.us-west-2.amazonaws.com/files/postage_label/20240607/e850f7940ff8b84b3bb6eb5bd8d24fac73.png
+                    rate:
+                      id: ''
+                      shipment_detail: null
+                      value: '38.33'
+                      currencyCode: USD
+                  sourceLocation:
+                    name: ''
+                    contactNumber: ''
+                    address:
+                      streetAddress1: 149 New Montgomery St.
+                      streetAddress2: null
+                      city: San Francisco
+                      state: CA
+                      zip: '94105'
+                      countryCode: US
+                      latitude: 38.77497
+                      longitude: -122.431297
+        '400':
+          description: Rate could not be retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                cause: error buying label
+                code: retrieve_rate_error
+                error: error buying label
+        '401':
+          description: Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: invalid api key or secret
+  /v1/matchAndShip:
+    post:
+      operationId: matchAndShip
+      summary: Match items to a nonprofit and buy the donation label
+      description: Matches the supplied items to a nearby nonprofit and purchases a shipping label in one call. Use for standard parcel-shippable items only - furniture, mattresses, drug paraphernalia, items over 50 kg and items returned as Damaged are excluded; route those to v1/donate. Pass `match_uuid` from v1/matchAndShip/estimate to lock in the previewed match and rate.
+      tags:
+      - Match
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchRequest'
+            example:
+              donor:
+                firstName: Test
+                lastName: ABV
+                email: hello@abc.com
+                contactNumber: '5555555555'
+              location:
+                address:
+                  streetAddress1: 190 Founders Prom
+                  city: Getzville
+                  state: NY
+                  zip: '14068'
+                  countryCode: US
+              parcel:
+                weight: 2.7
+              items:
+              - title: Original Bag - Ivory
+                sku: ABV001
+                description: ''
+                quantity: 1
+                categoryTypes:
+                - feminine
+                weightLbs: 2.5
+              - title: Stroller Straps - Ivory
+                sku: ABV332
+                description: ''
+                quantity: 1
+                categoryTypes:
+                - feminine
+                weightLbs: 0.18
+      responses:
+        '200':
+          description: Match created and label purchased.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchResponse'
+              example:
+                match:
+                  uuid: 0509dc14-dd2d-4e36-812b-52a4b2765255
+                  nonprofit:
+                    organizationName: Woodstock Area Counsel On Aging
+                    website: https://woodstockareacounselonaging.org
+                    address:
+                      streetAddress1: 149 New Montgomery St.
+                      streetAddress2: null
+                      city: San Francisco
+                      state: CA
+                      zip: '94105'
+                      countryCode: US
+                      latitude: 38.77497
+                      longitude: -122.431297
+                  distanceMiles: '0'
+                  items:
+                  - uuid: 6e781121-14ce-4fdd-86cf-918f6472adca
+                    title: MacBook Pro 13
+                    sku: '500'
+                    quantity: '3'
+                    weight: 4
+                  label:
+                    trackingNumber: '9405500110368049165575'
+                    carrier: USPS
+                    labelURL: https://easypost-files.s3.us-west-2.amazonaws.com/files/postage_label/20240607/e850f7940ff8b84b3bb6eb5bd8d24fac73.png
+                    rate:
+                      id: ''
+                      shipment_detail: null
+                      value: '38.33'
+                      currencyCode: USD
+                  sourceLocation:
+                    name: ''
+                    contactNumber: ''
+                    address:
+                      streetAddress1: 149 New Montgomery St.
+                      streetAddress2: null
+                      city: San Francisco
+                      state: CA
+                      zip: '94105'
+                      countryCode: US
+                      latitude: 38.77497
+                      longitude: -122.431297
+        '400':
+          description: Rate could not be retrieved or the label could not be purchased.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                cause: error buying label
+                code: retrieve_rate_error
+                error: error buying label
+        '401':
+          description: Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: invalid api key or secret
+        '403':
+          description: The `retailer_uuid` supplied is not a child retailer of the account that owns the API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: retailer_not_found
+                error: child retailer not found
+  /v1/match:
+    post:
+      operationId: match
+      summary: Match items to a nonprofit
+      description: Returns a nonprofit match for the supplied items. Does not estimate shipping and does not create a shipment. If you buy your own label you must follow up with v1/match/ship so the nonprofit is notified of the incoming parcel and donation receipts can be generated. Same category, weight and damaged-return exclusions as v1/matchAndShip.
+      tags:
+      - Match
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchRequest'
+            example:
+              donor:
+                firstName: John
+                lastName: Doe
+                email: john.doe@liquidonate.com
+                contactNumber: '123456789'
+              items:
+              - title: MacBook
+                quantity: 1
+                description: works
+                sku: mackbook-1
+                price: '100.00'
+                categoryTypes:
+                - laptops_and_computers
+                conditionTagTypes:
+                - new
+                weightLbs: 15
+              location:
+                address:
+                  streetAddress1: 149 New Montgomery St.
+                  city: San Francisco
+                  state: CA
+                  zip: '94105'
+                  countryCode: US
+                  latitude: 38.77497
+                  longitude: -122.431297
+      responses:
+        '200':
+          description: Nonprofit match. Label fields are empty because no label was purchased.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchResponse'
+        '401':
+          description: Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: invalid api key or secret
+components:
+  schemas:
+    Label:
+      type: object
+      description: A purchased shipping label for the donation parcel.
+      properties:
+        trackingNumber:
+          type: string
+          example: '9405500110368049165575'
+        carrier:
+          type: string
+          example: USPS
+        labelURL:
+          type: string
+          format: uri
+          description: Downloadable postage label image.
+        rate:
+          $ref: '#/components/schemas/Rate'
+    Rate:
+      type: object
+      properties:
+        id:
+          type: string
+        shipment_detail:
+          type: object
+          nullable: true
+        value:
+          type: string
+          description: Shipping rate as a decimal string.
+          example: '38.33'
+        currencyCode:
+          type: string
+          example: USD
+    Error:
+      type: object
+      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          example: retrieve_rate_error
+        error:
+          type: string
+          description: Human-readable error message.
+          example: error buying label
+        cause:
+          type: string
+          description: Underlying cause, when available.
+    Nonprofit:
+      type: object
+      description: The nonprofit LiquiDonate matched the items to.
+      properties:
+        organizationName:
+          type: string
+          example: Woodstock Area Counsel On Aging
+        website:
+          type: string
+          example: https://woodstockareacounselonaging.org
+        address:
+          $ref: '#/components/schemas/Address'
+    Match:
+      type: object
+      description: A nonprofit match, optionally with a purchased shipping label.
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: Match UUID. Pass to v1/matchAndShip or v1/match/ship to keep the same match and rate.
+        rma_id:
+          type: string
+          nullable: true
+        nonprofit:
+          $ref: '#/components/schemas/Nonprofit'
+        distanceMiles:
+          type: string
+          description: Distance to the matched nonprofit, in miles.
+          example: '7.38'
+        rate:
+          type: string
+          description: Shipping rate as a decimal string.
+          example: '36.94'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchItem'
+        label:
+          $ref: '#/components/schemas/Label'
+        labels:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/Label'
+        sourceLocation:
+          $ref: '#/components/schemas/Location'
+    CategoryType:
+      type: string
+      description: LiquiDonate item category. Drives which nonprofits are eligible for a match.
+      enum:
+      - packaged_food_and_snacks
+      - masculine
+      - sports
+      - personal_hygiene
+      - non_fiction_books
+      - cats
+      - pillows
+      - packaged_foods_and_snacks
+      - electronics
+      - health_products
+      - pain_relief
+      - rugs__blankets
+      - electronic_accessories
+      - living_room
+      - feminine
+      - kids
+      - school_supplies
+      - furniture
+      - textbooks
+      - other_electronics
+      - office_supplies
+      - office_furniture
+      - prepared_meals
+      - all
+      - other_pets
+      - outdoor_gear_other
+      - beauty_products
+      - arts__crafts
+      - personal_care
+      - office_goods
+      - shelf_stable_milk
+      - outdoor_gear
+      - books
+      - clothing
+      - fiction_books
+      - home_goods
+      - home_furniture
+      - perishable
+      - food
+      - laptops_and_computers
+      - first_aid
+      - mobile_phones
+      - pharmacy
+      - adaptiveassistive_equipment__ppe
+      - pet_supplies
+      - camping
+      - outdoor_furniture
+      - beverages
+      - non_perishable
+      - glasses__eyewear
+      - canned_foods
+      - dogs
+      - laptops__desktop_computers
+      - monitors
+      - audio_equipment
+      - cell_phones
+      - televisions
+      - bathroom_organization
+      - storage__organization
+      - bathroom_accessories
+      - sexual_wellness
+      - seasonal_home_decor
+      - decor
+      - family
+      - packing__shipping
+      - masculine_shoes
+      - kids_socks__underwear
+      - masculine_clothing
+      - masculine_formal_wear
+      - masculine_costumes
+      - supplements
+      - kids_outerwear
+      - masculine_outerwear
+      - diapers__baby_wipes
+      - kids_shoes
+      - kids_clothing
+      - masculine_jewelry__accessories
+      - feminine_jewelry__accessories
+      - feminine_shoes
+      - masculine_socks__underwear
+      - feminine_socks__underwear
+      - feminine_formal_wear
+      - makeup
+      - baby_supplies
+      - strollers__car_seats
+      - baby_formula__food
+      - hair_care
+      - skin_care
+      - audiovideo
+      - bedding
+      - raw_materials
+      - games__activities
+      - small_appliances
+      - book_bags
+      - cookware
+      - towels_rugs_mats
+      - shower_curtains
+      - classroom_supplies
+      - toys__games
+      - holiday__seasonal
+      - lunch_bags
+      - bedmattress
+      - lamps__lighting
+      - desks
+      - media_players
+      - seating
+      - appliances
+      - office_organization
+      - office_storage__organization
+      - feeding
+      - equipment
+      - gaming_consoles
+      - tablets
+      - backpacking
+      - tents
+      - winter_sports
+      - cycling
+      - nursery
+      - toys__activities
+      - storage__hard_drives
+      - videophoto_cameras
+      - exercise__fitness
+      - accessories
+      - water_sports
+      - playsets
+      - cleaning
+      - sleeping_bags
+      - miscellaneous_gear
+      - camp_cooking
+      - tools
+      - holiday_decorations
+      - maintenance_equipment
+      - home_storage__organization
+      - metals
+      - other_raw_materials
+      - tables
+      - kitchen
+      - bedroom
+      - bathroom
+      - cat_food
+      - cat_health_and_general_supplies
+      - dog_food
+      - dog_toys
+      - other_pet_food
+      - other_pet_toys
+      - liquids
+      - wood_supplies
+      - stoneceramics
+      - glass
+      - textiles
+      - cat_toys
+      - tableware
+      - paper_products
+      - other_pet_health_and_general_supplies
+      - dog_health_and_general_supplies
+      - adaptiveassistive
+      - writingdrawing
+      - feminine_costumes
+      - children
+      - home_seating
+      - infant
+      - kids_costumes
+      - kids_accessories
+      - feminine_clothing
+      - window_accessories
+      - masculine__swimwear
+      - feminine__swimwear
+      - kids__swimwear
+      - feminine_outerwear
+      - party_supplies
+      - exclusions
+    MatchItem:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        title:
+          type: string
+        sku:
+          type: string
+        quantity:
+          type: string
+          description: Quantity, returned as a string.
+        weight:
+          type: number
+          format: double
+    Donor:
+      type: object
+      description: The person donating or returning the items.
+      properties:
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example: john.doe@liquidonate.com
+        contactNumber:
+          type: string
+          example: '123456789'
+      required:
+      - firstName
+      - lastName
+      - email
+    Location:
+      type: object
+      properties:
+        name:
+          type: string
+        contactNumber:
+          type: string
+        contactEmail:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+      required:
+      - address
+    MatchRequest:
+      type: object
+      properties:
+        donor:
+          $ref: '#/components/schemas/Donor'
+        location:
+          $ref: '#/components/schemas/Location'
+        parcel:
+          type: object
+          properties:
+            weight:
+              type: number
+              format: double
+              description: Total parcel weight in pounds.
+              example: 2.7
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestItem'
+        match_uuid:
+          type: string
+          format: uuid
+          description: Optional. UUID returned by v1/matchAndShip/estimate. Recommended so the same match and rate are applied.
+        order_id:
+          type: string
+          description: Optional. Your identifier for the associated order.
+        rma_id:
+          type: string
+          description: Optional. Return Merchandise Authorization ID.
+        retailer_uuid:
+          type: string
+          format: uuid
+          description: Optional. Child retailer UUID. The child retailer must be linked to the retailer that owns the API key.
+      required:
+      - donor
+      - location
+      - items
+    RequestItem:
+      type: object
+      description: An item being donated or returned.
+      properties:
+        title:
+          type: string
+          example: Original Bag - Ivory
+        sku:
+          type: string
+          example: ABV001
+        description:
+          type: string
+        quantity:
+          type: integer
+          example: 1
+        price:
+          type: string
+          example: '100.00'
+        categoryTypes:
+          type: array
+          description: One or more LiquiDonate item categories. Drives nonprofit matching.
+          items:
+            $ref: '#/components/schemas/CategoryType'
+        conditionTagTypes:
+          type: array
+          items:
+            type: string
+            example: new
+          description: Condition tags for the item, e.g. "new".
+        weightLbs:
+          type: number
+          format: double
+          example: 2.5
+      required:
+      - title
+      - quantity
+    MatchResponse:
+      type: object
+      properties:
+        match:
+          $ref: '#/components/schemas/Match'
+    Address:
+      type: object
+      description: A US postal address. Latitude/longitude are optional; LiquiDonate geocodes when omitted.
+      properties:
+        streetAddress1:
+          type: string
+          example: 149 New Montgomery St.
+        streetAddress2:
+          type: string
+          nullable: true
+          example: Floor 4
+        city:
+          type: string
+          example: San Francisco
+        state:
+          type: string
+          description: Two-letter state code.
+          example: CA
+        zip:
+          type: string
+          example: '94105'
+        countryCode:
+          type: string
+          example: US
+        latitude:
+          type: number
+          format: double
+          nullable: true
+          example: 38.77497
+        longitude:
+          type: number
+          format: double
+          nullable: true
+          example: -122.431297
+      required:
+      - streetAddress1
+      - city
+      - state
+      - zip
+      - countryCode
+  securitySchemes:
+    liquidonateKey:
+      type: apiKey
+      in: header
+      name: X-LiquiDonate-Key
+      description: Retailer API key issued by v1/setupRetailer. Prefixed `ld_`.
+    liquidonateSecret:
+      type: apiKey
+      in: header
+      name: X-LiquiDonate-Secret
+      description: Retailer API secret issued by v1/setupRetailer. Prefixed `ld_sk_`.

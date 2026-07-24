@@ -1,0 +1,497 @@
+openapi: 3.1.0
+info:
+  title: MagicMatch by LiquiDonate Donate API
+  version: 1.0.0
+  summary: 'Donation-as-a-Service: match returned or excess retail items to nearby nonprofits and buy the donation shipping label.'
+  description: 'MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.
+
+
+    **Choosing an endpoint**
+
+
+    - `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.
+
+    - `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.
+
+    - `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.
+
+    - `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.
+
+    - `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.
+
+    - `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.
+
+
+    **Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a "Damaged" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.
+
+
+    This description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.'
+  contact:
+    name: LiquiDonate
+    url: https://docs-magicmatch.liquidonate.com
+    email: sales@liquidonate.com
+  termsOfService: https://www.liquidonate.com/terms-of-service
+  x-source: https://docs-magicmatch.liquidonate.com
+  x-source-collection: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  x-generated-by: api-evangelist enrichment pipeline
+  x-generated: '2026-07-19'
+servers:
+- url: https://api.liquidonate.com
+  description: 'Production. Verified live: unauthenticated requests return 401 {"error":"invalid api key or secret"}.'
+security:
+- liquidonateKey: []
+  liquidonateSecret: []
+tags:
+- name: Donate
+  description: Bulky, multi-package and pickup-scheduled donations.
+paths:
+  /v1/donate:
+    post:
+      operationId: donate
+      summary: Request donation handling for bulky, multi-package or pickup items
+      description: Submits an item for donation handling where standard parcel shipping does not apply - large or oversized goods, items needing special handling or manual review, single products shipping across multiple packages (supply `requestItemLabels`), and donations needing a scheduled pickup window (supply `pickupHours`).
+      tags:
+      - Donate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                item:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    quantity:
+                      type: integer
+                    description:
+                      type: string
+                    sizeType:
+                      type: string
+                      description: Item size band, e.g. "medium".
+                      example: medium
+                    fulfillmentTypes:
+                      type: array
+                      items:
+                        type: string
+                        example: pickup
+                      description: How the item will be collected, e.g. "pickup".
+                    recipientTypes:
+                      type: array
+                      items:
+                        type: string
+                        example: nonprofit
+                      description: Eligible recipient classes, e.g. "nonprofit".
+                    categoryTypes:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/CategoryType'
+                    conditionTagTypes:
+                      type: array
+                      items:
+                        type: string
+                        example: new
+                    fairMarketValue:
+                      $ref: '#/components/schemas/Money'
+                    imageURLs:
+                      type: array
+                      items:
+                        type: string
+                        format: uri
+                    location:
+                      $ref: '#/components/schemas/Location'
+                    unitType:
+                      type: string
+                      description: Unit of donation, e.g. "individual_item".
+                      example: individual_item
+                    weightLbs:
+                      type: number
+                      format: double
+                    lengthInches:
+                      type: number
+                    heightInches:
+                      type: number
+                    widthInches:
+                      type: number
+                    requestItemLabels:
+                      type: array
+                      description: One entry per package when the donation ships in multiple boxes.
+                      items:
+                        type: object
+                        properties:
+                          weightInLbs:
+                            type: number
+                    pickupHours:
+                      type: object
+                      description: Pickup availability windows for scheduled collection.
+                      properties:
+                        timezone:
+                          type: string
+                          example: America/Los_Angeles
+                        pickupIntervals:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              days:
+                                type: array
+                                items:
+                                  type: string
+                                  example: monday
+                              startTimeLocal:
+                                type: string
+                                example: '10:00'
+                              endTimeLocal:
+                                type: string
+                                example: '12:00'
+                  required:
+                  - title
+                  - quantity
+              required:
+              - item
+            example:
+              item:
+                title: Example Item
+                quantity: 1
+                description: This is an example description.
+                sizeType: medium
+                fulfillmentTypes:
+                - pickup
+                recipientTypes:
+                - nonprofit
+                categoryTypes:
+                - electronics
+                fairMarketValue:
+                  value: 100
+                  currencyCode: USD
+                conditionTagTypes:
+                - new
+                location:
+                  name: Aisya
+                  contactNumber: '4125124729'
+                  address:
+                    streetAddress1: 123 Main St
+                    streetAddress2: null
+                    city: New York
+                    state: NY
+                    zip: '10001'
+                    countryCode: US
+                    latitude: 40.7128
+                    longitude: -74.006
+                unitType: individual_item
+                weightLbs: 2.5
+                lengthInches: 10
+                heightInches: 5
+                widthInches: 3
+                pickupHours:
+                  timezone: America/Los_Angeles
+                  pickupIntervals:
+                  - days:
+                    - monday
+                    - tuesday
+                    startTimeLocal: '10:00'
+                    endTimeLocal: '12:00'
+      responses:
+        '200':
+          description: Donation request accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        format: uuid
+              example:
+                item:
+                  uuid: efab1900-3dd3-48b6-9f1a-1c8ac58ccbec
+        '400':
+          description: Validation failed on the item payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: missing_item_title
+                error: Item needs to have a title
+        '401':
+          description: Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: invalid api key or secret
+components:
+  schemas:
+    Error:
+      type: object
+      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          example: retrieve_rate_error
+        error:
+          type: string
+          description: Human-readable error message.
+          example: error buying label
+        cause:
+          type: string
+          description: Underlying cause, when available.
+    CategoryType:
+      type: string
+      description: LiquiDonate item category. Drives which nonprofits are eligible for a match.
+      enum:
+      - packaged_food_and_snacks
+      - masculine
+      - sports
+      - personal_hygiene
+      - non_fiction_books
+      - cats
+      - pillows
+      - packaged_foods_and_snacks
+      - electronics
+      - health_products
+      - pain_relief
+      - rugs__blankets
+      - electronic_accessories
+      - living_room
+      - feminine
+      - kids
+      - school_supplies
+      - furniture
+      - textbooks
+      - other_electronics
+      - office_supplies
+      - office_furniture
+      - prepared_meals
+      - all
+      - other_pets
+      - outdoor_gear_other
+      - beauty_products
+      - arts__crafts
+      - personal_care
+      - office_goods
+      - shelf_stable_milk
+      - outdoor_gear
+      - books
+      - clothing
+      - fiction_books
+      - home_goods
+      - home_furniture
+      - perishable
+      - food
+      - laptops_and_computers
+      - first_aid
+      - mobile_phones
+      - pharmacy
+      - adaptiveassistive_equipment__ppe
+      - pet_supplies
+      - camping
+      - outdoor_furniture
+      - beverages
+      - non_perishable
+      - glasses__eyewear
+      - canned_foods
+      - dogs
+      - laptops__desktop_computers
+      - monitors
+      - audio_equipment
+      - cell_phones
+      - televisions
+      - bathroom_organization
+      - storage__organization
+      - bathroom_accessories
+      - sexual_wellness
+      - seasonal_home_decor
+      - decor
+      - family
+      - packing__shipping
+      - masculine_shoes
+      - kids_socks__underwear
+      - masculine_clothing
+      - masculine_formal_wear
+      - masculine_costumes
+      - supplements
+      - kids_outerwear
+      - masculine_outerwear
+      - diapers__baby_wipes
+      - kids_shoes
+      - kids_clothing
+      - masculine_jewelry__accessories
+      - feminine_jewelry__accessories
+      - feminine_shoes
+      - masculine_socks__underwear
+      - feminine_socks__underwear
+      - feminine_formal_wear
+      - makeup
+      - baby_supplies
+      - strollers__car_seats
+      - baby_formula__food
+      - hair_care
+      - skin_care
+      - audiovideo
+      - bedding
+      - raw_materials
+      - games__activities
+      - small_appliances
+      - book_bags
+      - cookware
+      - towels_rugs_mats
+      - shower_curtains
+      - classroom_supplies
+      - toys__games
+      - holiday__seasonal
+      - lunch_bags
+      - bedmattress
+      - lamps__lighting
+      - desks
+      - media_players
+      - seating
+      - appliances
+      - office_organization
+      - office_storage__organization
+      - feeding
+      - equipment
+      - gaming_consoles
+      - tablets
+      - backpacking
+      - tents
+      - winter_sports
+      - cycling
+      - nursery
+      - toys__activities
+      - storage__hard_drives
+      - videophoto_cameras
+      - exercise__fitness
+      - accessories
+      - water_sports
+      - playsets
+      - cleaning
+      - sleeping_bags
+      - miscellaneous_gear
+      - camp_cooking
+      - tools
+      - holiday_decorations
+      - maintenance_equipment
+      - home_storage__organization
+      - metals
+      - other_raw_materials
+      - tables
+      - kitchen
+      - bedroom
+      - bathroom
+      - cat_food
+      - cat_health_and_general_supplies
+      - dog_food
+      - dog_toys
+      - other_pet_food
+      - other_pet_toys
+      - liquids
+      - wood_supplies
+      - stoneceramics
+      - glass
+      - textiles
+      - cat_toys
+      - tableware
+      - paper_products
+      - other_pet_health_and_general_supplies
+      - dog_health_and_general_supplies
+      - adaptiveassistive
+      - writingdrawing
+      - feminine_costumes
+      - children
+      - home_seating
+      - infant
+      - kids_costumes
+      - kids_accessories
+      - feminine_clothing
+      - window_accessories
+      - masculine__swimwear
+      - feminine__swimwear
+      - kids__swimwear
+      - feminine_outerwear
+      - party_supplies
+      - exclusions
+    Location:
+      type: object
+      properties:
+        name:
+          type: string
+        contactNumber:
+          type: string
+        contactEmail:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+      required:
+      - address
+    Money:
+      type: object
+      properties:
+        value:
+          type: number
+          example: 100
+        currencyCode:
+          type: string
+          example: USD
+    Address:
+      type: object
+      description: A US postal address. Latitude/longitude are optional; LiquiDonate geocodes when omitted.
+      properties:
+        streetAddress1:
+          type: string
+          example: 149 New Montgomery St.
+        streetAddress2:
+          type: string
+          nullable: true
+          example: Floor 4
+        city:
+          type: string
+          example: San Francisco
+        state:
+          type: string
+          description: Two-letter state code.
+          example: CA
+        zip:
+          type: string
+          example: '94105'
+        countryCode:
+          type: string
+          example: US
+        latitude:
+          type: number
+          format: double
+          nullable: true
+          example: 38.77497
+        longitude:
+          type: number
+          format: double
+          nullable: true
+          example: -122.431297
+      required:
+      - streetAddress1
+      - city
+      - state
+      - zip
+      - countryCode
+  securitySchemes:
+    liquidonateKey:
+      type: apiKey
+      in: header
+      name: X-LiquiDonate-Key
+      description: Retailer API key issued by v1/setupRetailer. Prefixed `ld_`.
+    liquidonateSecret:
+      type: apiKey
+      in: header
+      name: X-LiquiDonate-Secret
+      description: Retailer API secret issued by v1/setupRetailer. Prefixed `ld_sk_`.
