@@ -1,22 +1,288 @@
 aid: liquidonate
 name: LiquiDonate
-description: LiquiDonate is a company surfaced as a portfolio company of uncork-capital and added to the
-  API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  LiquiDonate is a San Francisco based reverse-logistics and donation-disposition platform that turns
+  retail returns, excess inventory and unsellable goods into local nonprofit donations instead of landfill
+  or liquidation. Its matching engine pairs items with nearby nonprofits that want them, buys the shipping
+  label, routes the parcel and generates the donation receipt, so retailers recover tax value and meet
+  extended-producer-responsibility and sustainability obligations. The company sells three product lines -
+  ReturnsDirect (customer-direct returns), WarehouseDirect (warehouse and 3PL excess inventory) and BoxDrop
+  (donation boxes) - and exposes two public developer APIs: MagicMatch, a donation-as-a-service API that
+  accepts parcel and item details and returns a nonprofit match plus a donation shipping label, and
+  ReturnsDirect, a beta returns-management integration for non-Shopify ecommerce platforms built on pushed
+  order data plus HMAC-signed return and refund webhooks. LiquiDonate integrates with Shopify, Loop,
+  EasyPost, FedEx, Bungii, SendGrid and Rise AI, and has been recognized on TIME Best Inventions 2025 and
+  Fast Company World Changing Ideas.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://cdn.prod.website-files.com/672dc2792e95c584b8beaaca/6739416b527eda8f246a7686_Liquidonate%20%20Webclip.png
 url: https://raw.githubusercontent.com/api-evangelist/liquidonate/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - uncork-capital
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: two public developer APIs documented, reconstructed and verified live
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
+- Reverse Logistics
+- Returns Management
+- Donations
+- Nonprofits
+- Retail
+- Ecommerce
+- Sustainability
+- Circular Economy
+- Shipping
+- Supply Chain
+- Excess Inventory
 - Company
-apis: []
+apis:
+- aid: liquidonate:liquidonate-donate-api
+  name: LiquiDonate Donate API
+  description: Bulky, multi-package and pickup-scheduled donations.
+  humanURL: https://docs-magicmatch.liquidonate.com
+  baseURL: https://api.liquidonate.com
+  tags:
+  - Donate
+  properties:
+  - type: OpenAPI
+    url: openapi/liquidonate-donate-api-openapi.yml
+  - type: Documentation
+    url: https://docs-magicmatch.liquidonate.com
+  - type: APIReference
+    url: https://docs-magicmatch.liquidonate.com
+  - type: Postman
+    url: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  - type: Documentation
+    url: https://docs-returns.liquidonate.com
+  - type: APIReference
+    url: https://docs-returns.liquidonate.com
+  - type: AsyncAPI
+    url: asyncapi/liquidonate-returnsdirect-asyncapi.yml
+  - type: Postman
+    url: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+- aid: liquidonate:liquidonate-match-api
+  name: LiquiDonate Match API
+  description: Match items to nonprofits.
+  humanURL: https://docs-magicmatch.liquidonate.com
+  baseURL: https://api.liquidonate.com
+  tags:
+  - Match
+  properties:
+  - type: OpenAPI
+    url: openapi/liquidonate-match-api-openapi.yml
+  - type: Documentation
+    url: https://docs-magicmatch.liquidonate.com
+  - type: APIReference
+    url: https://docs-magicmatch.liquidonate.com
+  - type: Postman
+    url: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  - type: Documentation
+    url: https://docs-returns.liquidonate.com
+  - type: APIReference
+    url: https://docs-returns.liquidonate.com
+  - type: AsyncAPI
+    url: asyncapi/liquidonate-returnsdirect-asyncapi.yml
+  - type: Postman
+    url: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+- aid: liquidonate:liquidonate-orders-api
+  name: LiquiDonate Orders API
+  description: Push order data into ReturnsDirect.
+  humanURL: https://docs-magicmatch.liquidonate.com
+  baseURL: https://api.liquidonate.com
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/liquidonate-orders-api-openapi.yml
+  - type: Documentation
+    url: https://docs-magicmatch.liquidonate.com
+  - type: APIReference
+    url: https://docs-magicmatch.liquidonate.com
+  - type: Postman
+    url: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  - type: Documentation
+    url: https://docs-returns.liquidonate.com
+  - type: APIReference
+    url: https://docs-returns.liquidonate.com
+  - type: AsyncAPI
+    url: asyncapi/liquidonate-returnsdirect-asyncapi.yml
+  - type: Postman
+    url: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+- aid: liquidonate:liquidonate-retailer-api
+  name: LiquiDonate Retailer API
+  description: Retailer account setup and lookup.
+  humanURL: https://docs-magicmatch.liquidonate.com
+  baseURL: https://api.liquidonate.com
+  tags:
+  - Retailer
+  properties:
+  - type: OpenAPI
+    url: openapi/liquidonate-retailer-api-openapi.yml
+  - type: Documentation
+    url: https://docs-magicmatch.liquidonate.com
+  - type: APIReference
+    url: https://docs-magicmatch.liquidonate.com
+  - type: Postman
+    url: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  - type: Documentation
+    url: https://docs-returns.liquidonate.com
+  - type: APIReference
+    url: https://docs-returns.liquidonate.com
+  - type: AsyncAPI
+    url: asyncapi/liquidonate-returnsdirect-asyncapi.yml
+  - type: Postman
+    url: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+- aid: liquidonate:liquidonate-ship-api
+  name: LiquiDonate Ship API
+  description: Purchase donation shipping labels.
+  humanURL: https://docs-magicmatch.liquidonate.com
+  baseURL: https://api.liquidonate.com
+  tags:
+  - Ship
+  properties:
+  - type: OpenAPI
+    url: openapi/liquidonate-ship-api-openapi.yml
+  - type: Documentation
+    url: https://docs-magicmatch.liquidonate.com
+  - type: APIReference
+    url: https://docs-magicmatch.liquidonate.com
+  - type: Postman
+    url: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  - type: Documentation
+    url: https://docs-returns.liquidonate.com
+  - type: APIReference
+    url: https://docs-returns.liquidonate.com
+  - type: AsyncAPI
+    url: asyncapi/liquidonate-returnsdirect-asyncapi.yml
+  - type: Postman
+    url: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+common:
+- type: AgenticAccess
+  url: agentic-access/liquidonate-agentic-access.yml
+- url: https://www.liquidonate.com
+  type: Website
+- url: https://docs.liquidonate.com
+  type: DeveloperPortal
+- url: https://docs.liquidonate.com
+  type: Documentation
+- url: https://docs.liquidonate.com
+  type: APIReference
+- url: https://www.liquidonate.com/integrations
+  type: GettingStarted
+- url: https://help.liquidonate.com
+  type: Support
+- url: https://www.liquidonate.com/blog
+  type: Blog
+- url: https://www.liquidonate.com/pricing
+  type: Pricing
+- url: https://app.liquidonate.com/login
+  type: SignUp
+- url: https://app.liquidonate.com/login
+  type: Login
+- url: https://www.liquidonate.com/terms-of-service
+  type: TermsOfService
+- url: https://www.liquidonate.com/privacy-policy
+  type: PrivacyPolicy
+- url: https://www.liquidonate.com/contact-us
+  type: Contact
+- url: https://www.liquidonate.com/about
+  type: About
+- url: https://www.liquidonate.com/press
+  type: Press
+- url: https://www.liquidonate.com/case-studies
+  type: CaseStudies
+- url: https://www.liquidonate.com/integrations
+  type: Integrations
+- url: https://apps.shopify.com/liquidonate
+  type: Marketplace
+- url: https://jobs.gusto.com/boards/liquidonate-inc-6984f107-b115-40e9-8c73-432c4902cff4
+  type: Careers
+- url: https://www.linkedin.com/company/liquidonate
+  type: LinkedIn
+- url: https://twitter.com/liquidonate
+  type: Twitter
+- url: https://www.youtube.com/@LiquiDonate
+  type: YouTube
+- url: https://www.instagram.com/liquidonate
+  type: Instagram
+- url: https://www.facebook.com/liquidonate
+  type: Facebook
+- url: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  type: Postman
+  name: MagicMatch published Postman collection
+- url: vocabulary/liquidonate-category-types.yml
+  type: Vocabulary
+- url: authentication/liquidonate-authentication.yml
+  type: Authentication
+- url: conventions/liquidonate-conventions.yml
+  type: Conventions
+- url: errors/liquidonate-problem-types.yml
+  type: ErrorCatalog
+- url: lifecycle/liquidonate-lifecycle.yml
+  type: Lifecycle
+- url: https://status.liquidonate.com/
+  type: StatusPage
+- url: conformance/liquidonate-conformance.yml
+  type: Conformance
+- url: data-model/liquidonate-data-model.yml
+  type: DataModel
+- url: sandbox/liquidonate-sandbox.yml
+  type: Sandbox
+- url: packages/liquidonate-packages.yml
+  type: Packages
+- url: well-known/liquidonate-well-known.yml
+  type: WellKnown
+- url: security/liquidonate-domain-security.yml
+  type: DomainSecurity
+- url: asyncapi/liquidonate-returnsdirect-asyncapi.yml
+  type: Webhooks
+- url: llms/liquidonate-llms.txt
+  type: LLMsTxt
+- url: skills/_index.yml
+  type: AgentSkill
+integrations:
+- name: Shopify
+  description: Ecommerce platform. LiquiDonate ships a public Shopify application.
+  url: https://apps.shopify.com/liquidonate
+- name: Loop
+  description: Returns platform. Handles and tracks returns for reuse, repair or recycling.
+  url: https://www.liquidonate.com/partner/loop
+- name: EasyPost
+  description: Shipping API used for label creation, tracking and carrier integration.
+  url: https://www.liquidonate.com/integrations
+- name: FedEx
+  description: Carrier for shipping, transportation and delivery.
+  url: https://www.liquidonate.com/integrations
+- name: Bungii
+  description: On-demand delivery service specializing in large-item transportation.
+  url: https://www.liquidonate.com/integrations
+- name: SendGrid
+  description: Email delivery platform for transactional and marketing email.
+  url: https://www.liquidonate.com/integrations
+- name: Rise AI
+  description: Customer gift-card platform for ecommerce.
+  url: https://www.liquidonate.com/integrations
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
