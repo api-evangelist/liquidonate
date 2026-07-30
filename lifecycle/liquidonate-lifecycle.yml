@@ -1,0 +1,43 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs-magicmatch.liquidonate.com, https://docs-returns.liquidonate.com, https://status.liquidonate.com/
+versioning:
+  scheme: uri-path
+  current: v1
+  note: MagicMatch versions in the URI path (/v1/...). ReturnsDirect endpoints are unversioned and the
+    product is labelled Beta in its own documentation title.
+  docs: https://docs-magicmatch.liquidonate.com
+stability:
+- api: MagicMatch by LiquiDonate
+  stage: ga
+  evidence: v1 path prefix; no beta labelling in docs.
+- api: ReturnsDirect by LiquiDonate
+  stage: beta
+  evidence: Documentation is titled "ReturnsDirect by LiquiDonate (Beta)".
+deprecation:
+  policy_url: null
+  sunset_header: null
+  note: No deprecation or sunset policy is published, and neither API documents Deprecation or Sunset
+    response headers (RFC 8594). Recorded absence.
+sla:
+  url: null
+  uptime_target: null
+  note: No public SLA or uptime commitment found on the marketing site or in either API documentation.
+status_page: https://status.liquidonate.com/
+status_page_details:
+  provider: Better Stack
+  title: LiquiDonate, Inc status
+  verified: '2026-07-19'
+  features:
+  - current status by service
+  - per-service uptime history
+  - scheduled maintenance
+  - previous incidents
+  monitored_services_observed:
+  - dashboard.liquidonate.com
+  note: The status page monitors the retailer dashboard. Neither api.liquidonate.com nor returns.liquidonate.com
+    was listed as a monitored service at the time of probe.
+changelog:
+  url: null
+  note: No dated changelog or release-notes page is published for either API. Recorded absence.
+deprecated_operations: []

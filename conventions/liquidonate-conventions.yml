@@ -1,0 +1,98 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs-magicmatch.liquidonate.com, https://docs-returns.liquidonate.com
+summary: Two APIs with different cross-cutting contracts. MagicMatch is an RPC-style POST-only API secured
+  by a static key/secret header pair. ReturnsDirect is a webhook-exchange integration secured by HMAC-SHA256
+  request signing in both directions.
+apis:
+- name: MagicMatch by LiquiDonate
+  base_url: https://api.liquidonate.com
+  style: RPC over HTTP. Every operation is a POST to a verb-named path (/v1/matchAndShip, /v1/donate);
+    there are no GET, PUT or DELETE operations and no resource collections.
+  authentication:
+    style: two static API key headers, both required
+    headers:
+    - X-LiquiDonate-Key
+    - X-LiquiDonate-Secret
+    key_prefixes:
+      key: ld_
+      secret: ld_sk_
+    provisioning: Issued by the v1/setupRetailer operation, which also creates the retailer and its first
+      user.
+    failure: 401 {"error":"invalid api key or secret"} (verified live 2026-07-19)
+    artifact: authentication/liquidonate-authentication.yml
+  versioning:
+    style: uri-path
+    current: v1
+  content_type: application/json request and response
+  identifiers: UUIDs (RFC 4122) for retailer, user, match and item. Returned as `uuid` on each object.
+  numeric_encoding: Money and rates are returned as decimal strings ("38.33"); item quantity is returned
+    as a string on match responses even though it is sent as an integer. Weights are numbers, in pounds
+    (weightLbs), except the documented 50 kg exclusion threshold.
+  error_envelope: '{code, error, cause} - see errors/liquidonate-problem-types.yml'
+  pagination:
+    supported: false
+    note: No list operations exist.
+  idempotency:
+    supported: false
+    header: null
+    note: 'No Idempotency-Key header and no documented replay guard. The closest published mechanism is
+      the match_uuid handoff: call v1/matchAndShip/estimate, then pass the returned match_uuid into v1/matchAndShip
+      so the same nonprofit match and shipping rate are applied. That preserves match consistency but
+      is not a documented deduplication guarantee - retrying a failed matchAndShip may purchase a second
+      label. Treat label purchase as non-idempotent and reconcile on trackingNumber.'
+  rate_limiting:
+    documented: false
+    note: No rate limit headers or quotas documented.
+  request_tracing:
+    documented: false
+    note: No request-id or correlation header documented.
+  multi_tenancy: Parent/child retailer model. A parent API key may act for a linked child retailer by
+    passing retailer_uuid; an unlinked uuid returns 403 retailer_not_found.
+  workflow_rules:
+  - Call v1/matchAndShip/estimate before v1/matchAndShip and pass match_uuid through, or the match and
+    rate may differ.
+  - After v1/match, if you buy your own label you MUST call v1/match/ship, otherwise the nonprofit is
+    not notified and no donation receipt is generated.
+  - v1/ship performs no matching and generates no donation receipt. Do not pair it with v1/match.
+  - Route furniture, mattresses, items over 50 kg, multi-package donations and pickup-scheduled donations
+    to v1/donate.
+- name: ReturnsDirect by LiquiDonate
+  base_url: https://returns.liquidonate.com
+  sandbox_url: https://returns-sandbox.liquidonate.com
+  style: Bidirectional webhook exchange. The retailer pushes orders in; LiquiDonate pushes return and
+    refund events back to a registered retailer URL.
+  authentication:
+    style: HMAC-SHA256 request signing with a shared secret, in both directions
+    headers:
+    - X-Shop-Domain
+    - X-Signature
+    signing: signature = HMAC-SHA256(sharedSecret, rawRequestBody), sent as lowercase hex.
+    verification: Verify inbound LiquiDonate events with a timing-safe comparison against the same computation
+      over the raw bytes received.
+    provisioning: The shared secret is provisioned out of band by LiquiDonate per shop.
+    failure: 400 missing headers (verified live 2026-07-19); 401 {"error":"Invalid signature"}.
+  versioning:
+    style: unversioned
+    current: null
+    note: Product is labelled Beta.
+  field_naming: Canonical camelCase. A retailer order API that already returns this exact shape needs
+    no custom mapper - LiquiDonate uses its built-in default mapper automatically. A custom mapper is
+    only needed for different field names or structure.
+  error_envelope: '{error} - see errors/liquidonate-problem-types.yml'
+  idempotency:
+    supported: false
+    note: Pushed orders are keyed by externalId and cached, so re-pushing the same order updates the cached
+      copy rather than duplicating it - an upsert, not a documented idempotency contract. Outbound events
+      carry no delivery id or dedupe key, so consumers should dedupe on (rmaId, event, updatedAt) themselves.
+  retry_delivery:
+    documented: false
+    note: No webhook retry schedule, delivery-id header or replay tooling is documented.
+  event_catalog: asyncapi/liquidonate-returnsdirect-asyncapi.yml
+cross_links:
+  authentication: authentication/liquidonate-authentication.yml
+  errors: errors/liquidonate-problem-types.yml
+  lifecycle: lifecycle/liquidonate-lifecycle.yml
+  sandbox: sandbox/liquidonate-sandbox.yml
+  data_model: data-model/liquidonate-data-model.yml
+  vocabulary: vocabulary/liquidonate-category-types.yml

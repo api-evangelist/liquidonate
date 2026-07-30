@@ -1,0 +1,417 @@
+openapi: 3.1.0
+info:
+  title: ReturnsDirect by LiquiDonate (Beta)
+  version: 1.0.0-beta
+  summary: 'Returns management integration: push order data to LiquiDonate and receive return and refund
+    status webhooks.'
+  description: 'ReturnsDirect by LiquiDonate integrates LiquiDonate as a returns management solution for
+    an ecommerce platform, retail brand or custom returns portal. The integration has two directions.
+
+
+    **Inbound (retailer to ReturnsDirect)** - you POST order data to `/webhooks/external-order` whenever
+    an order is created or updated. LiquiDonate caches it so the customer-facing return portal can look
+    up order details at return time without calling your API.
+
+
+    **Outbound (ReturnsDirect to retailer)** - LiquiDonate POSTs return and refund status events to the
+    webhook URL you register, so you can update your own order management system. See the AsyncAPI definition
+    in `asyncapi/` for the full event catalog.
+
+
+    **Order lookup, zero-config option** - if you also want ReturnsDirect to fetch backlog orders on demand
+    from your API, have your order search endpoint return the canonical ReturnsDirect camelCase shape
+    documented here. When your API speaks that format no custom mapping code is needed; the built-in default
+    mapper is used automatically. A custom mapper is only required when your API uses different field
+    names or a different structure.
+
+
+    **Authentication** - both directions use HMAC-SHA256 with a shared secret LiquiDonate provisions for
+    your shop. Sign the raw request body: `signature = HMAC-SHA256(secret, rawRequestBody)`, sent as lowercase
+    hex in `X-Signature` alongside `X-Shop-Domain`. LiquiDonate sends the same headers outbound; verify
+    with a timing-safe comparison.
+
+
+    This description is an API Evangelist reconstruction of the published Postman documentation at https://docs-returns.liquidonate.com
+    - LiquiDonate does not publish an OpenAPI definition. This API is in Beta.'
+  contact:
+    name: LiquiDonate
+    url: https://docs-returns.liquidonate.com
+    email: sales@liquidonate.com
+  termsOfService: https://www.liquidonate.com/terms-of-service
+  x-source: https://docs-returns.liquidonate.com
+  x-source-collection: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+  x-lifecycle: beta
+  x-generated-by: api-evangelist enrichment pipeline
+  x-generated: '2026-07-19'
+servers:
+- url: https://returns.liquidonate.com
+  description: Production.
+- url: https://returns-sandbox.liquidonate.com
+  description: Sandbox, documented as the integration base URL.
+security:
+- shopDomain: []
+  hmacSignature: []
+tags:
+- name: Orders
+  description: Push order data into ReturnsDirect.
+paths:
+  /webhooks/external-order:
+    post:
+      operationId: pushExternalOrder
+      summary: Push an order to ReturnsDirect
+      description: Sends order data to LiquiDonate whenever an order is created or updated in your system.
+        LiquiDonate caches the order so the customer-facing return portal can resolve return eligibility
+        without calling your API. Sign the raw body with HMAC-SHA256 and send the hex digest in `X-Signature`.
+      tags:
+      - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+            example:
+              externalId: order_99001
+              orderNumber: '#1001'
+              confirmationNumber: CONF-99001
+              orderDate: '2026-03-01T10:00:00Z'
+              customerName: Jane Smith
+              customerEmail: jane@example.com
+              customerPhone: +1-555-0100
+              shippingAddress1: 123 Main St
+              shippingAddress2: Apt 4B
+              shippingCity: Austin
+              shippingState: TX
+              shippingZip: '78701'
+              shippingCountry: US
+              shippingPhone: +1-555-0100
+              shippingLatitude: 30.2672
+              shippingLongitude: -97.7431
+              originalShippingFee: 9.99
+              shippingTaxAmount: 0.82
+              tags:
+              - vip
+              - spring-promo
+              transactions:
+              - id: txn_abc123
+                kind: sale
+                status: success
+                amount: 149.97
+                currency: USD
+                paymentMethod: visa
+                createdAt: '2026-03-01T10:01:00Z'
+              lineItems:
+              - externalLineItemId: li_001
+                externalFulfillmentLineItemId: fli_001
+                externalVariantId: var_blue_md
+                title: Classic T-Shirt
+                description: 100% cotton crew neck
+                sku: TSHIRT-BLUE-MD
+                imageUrl: https://cdn.acme.com/products/tshirt-blue.jpg
+                quantity: 2
+                pricePerUnit: 49.99
+                discountAmountPerUnit: 5.0
+                total: 89.98
+                weight: 0.3
+                weightUnit: KILOGRAMS
+                collectionIds:
+                - col_apparel
+                - col_summer
+                categoryTypes:
+                - clothing
+                tags:
+                - final-sale
+      responses:
+        '200':
+          description: Order stored.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  id:
+                    type: integer
+              example:
+                success: true
+                id: 42
+        '400':
+          description: 'Missing required fields, or missing signing headers. Verified live: a request
+            without headers returns {"error":"Missing X-Shop-Domain or X-Signature header"}.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: 'Missing required fields: externalId, orderNumber'
+        '401':
+          description: The HMAC signature did not verify.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Invalid signature
+webhooks:
+  returnStatusChanged:
+    post:
+      operationId: onReturnStatusChanged
+      summary: Return status event
+      description: Sent to your registered webhook URL when a return moves to pending, pending_approval,
+        approved, rejected or cancelled. Signed with the same HMAC-SHA256 scheme; verify with a timing-safe
+        comparison.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReturnWebhookEvent'
+            example:
+              event: return.approved
+              shop: acme.com
+              parcelId: 101
+              rmaId: '1001'
+              externalOrderId: order_99001
+              orderNumber: '#1001'
+              status: approved
+              refundStatus: pending
+              refundAmount: null
+              refundMethod: cash
+              updatedAt: '2026-03-07T09:05:00.000Z'
+      responses:
+        '200':
+          description: Acknowledged.
+  refundStatusChanged:
+    post:
+      operationId: onRefundStatusChanged
+      summary: Refund status event
+      description: Sent to your registered webhook URL when a refund completes or is flagged for review.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReturnWebhookEvent'
+            example:
+              event: refund.completed
+              shop: acme.com
+              parcelId: 101
+              rmaId: '1001'
+              externalOrderId: order_99001
+              orderNumber: '#1001'
+              status: approved
+              refundStatus: completed
+              refundAmount: 89.98
+              refundMethod: cash
+              updatedAt: '2026-03-07T10:30:00.000Z'
+      responses:
+        '200':
+          description: Acknowledged.
+components:
+  securitySchemes:
+    shopDomain:
+      type: apiKey
+      in: header
+      name: X-Shop-Domain
+      description: Your shop identifier, e.g. acme.com. Must match the value LiquiDonate has on file.
+    hmacSignature:
+      type: apiKey
+      in: header
+      name: X-Signature
+      description: HMAC-SHA256 of the raw request body using the shared secret LiquiDonate provisions
+        for your shop, as lowercase hex.
+  schemas:
+    Order:
+      type: object
+      description: An order in the canonical ReturnsDirect camelCase format. A retailer order API that
+        already speaks this shape needs no custom mapper - the built-in default mapper is used automatically.
+      properties:
+        externalId:
+          type: string
+          description: Your order identifier.
+          example: order_99001
+        orderNumber:
+          type: string
+          example: '#1001'
+        confirmationNumber:
+          type: string
+          example: CONF-99001
+        orderDate:
+          type: string
+          format: date-time
+        customerName:
+          type: string
+        customerEmail:
+          type: string
+          format: email
+        customerPhone:
+          type: string
+        shippingAddress1:
+          type: string
+        shippingAddress2:
+          type: string
+        shippingCity:
+          type: string
+        shippingState:
+          type: string
+        shippingZip:
+          type: string
+        shippingCountry:
+          type: string
+        shippingPhone:
+          type: string
+        shippingLatitude:
+          type: number
+        shippingLongitude:
+          type: number
+        originalShippingFee:
+          type: number
+        shippingTaxAmount:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+        transactions:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: txn_abc123
+              kind:
+                type: string
+                example: sale
+              status:
+                type: string
+                example: success
+              amount:
+                type: number
+              currency:
+                type: string
+                example: USD
+              paymentMethod:
+                type: string
+                example: visa
+              createdAt:
+                type: string
+                format: date-time
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLineItem'
+      required:
+      - externalId
+      - orderNumber
+    OrderLineItem:
+      type: object
+      properties:
+        externalLineItemId:
+          type: string
+          example: li_001
+        externalFulfillmentLineItemId:
+          type: string
+          example: fli_001
+        externalVariantId:
+          type: string
+          example: var_blue_md
+        title:
+          type: string
+          example: Classic T-Shirt
+        description:
+          type: string
+        sku:
+          type: string
+          example: TSHIRT-BLUE-MD
+        imageUrl:
+          type: string
+          format: uri
+        quantity:
+          type: integer
+          example: 2
+        pricePerUnit:
+          type: number
+          example: 49.99
+        discountAmountPerUnit:
+          type: number
+          example: 5.0
+        total:
+          type: number
+          example: 89.98
+        weight:
+          type: number
+          example: 0.3
+        weightUnit:
+          type: string
+          example: KILOGRAMS
+        collectionIds:
+          type: array
+          items:
+            type: string
+        categoryTypes:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+    ReturnWebhookEvent:
+      type: object
+      description: Outbound return/refund status event sent by ReturnsDirect to the retailer webhook URL.
+      properties:
+        event:
+          type: string
+          enum:
+          - return.pending
+          - return.pending_approval
+          - return.approved
+          - return.rejected
+          - return.cancelled
+          - refund.completed
+          - refund.flagged
+        shop:
+          type: string
+          description: Your shop identifier.
+          example: acme.com
+        parcelId:
+          type: integer
+          example: 101
+        rmaId:
+          type: string
+          example: '1001'
+        externalOrderId:
+          type: string
+          example: order_99001
+        orderNumber:
+          type: string
+          example: '#1001'
+        status:
+          type: string
+          enum:
+          - pending
+          - pending_approval
+          - approved
+          - rejected
+          - cancelled
+        refundStatus:
+          type: string
+          enum:
+          - pending
+          - completed
+          - flagged
+        refundAmount:
+          type: number
+          nullable: true
+        refundMethod:
+          type: string
+          example: cash
+        updatedAt:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      description: ReturnsDirect error envelope.
+      properties:
+        error:
+          type: string

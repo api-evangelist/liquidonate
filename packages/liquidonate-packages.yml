@@ -1,0 +1,34 @@
+generated: '2026-07-19'
+method: searched
+source: npm, PyPI, RubyGems, Packagist, crates.io registry searches plus the LiquiDonate documentation
+  and site
+summary: LiquiDonate publishes no first-party client libraries in any public package registry. Both APIs
+  are plain JSON over HTTPS and are documented as Postman collections. Recorded absence.
+registries_searched:
+- registry: npm
+  query: liquidonate
+  results: 0
+- registry: pypi
+  query: liquidonate
+  results: 0
+  note: https://pypi.org/pypi/liquidonate/json returns 404
+- registry: rubygems
+  query: liquidonate
+  results: 0
+- registry: packagist
+  query: liquidonate
+  results: 0
+- registry: crates.io
+  query: liquidonate
+  results: 0
+packages: []
+distribution:
+- kind: Shopify application
+  url: https://apps.shopify.com/liquidonate
+  note: The no-code path for Shopify merchants. Not a developer SDK.
+- kind: Postman collection
+  url: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  note: MagicMatch. Importable into Postman as the practical client starting point.
+- kind: Postman collection
+  url: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+  note: ReturnsDirect.

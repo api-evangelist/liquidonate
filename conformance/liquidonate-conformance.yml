@@ -1,0 +1,61 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/liquidonate-magicmatch-openapi.yml, openapi/liquidonate-returnsdirect-openapi.yml
+note: Derived from the reconstructed OpenAPI definitions and the published documentation. No certification
+  or compliance program (SOC 2, ISO 27001, PCI DSS, HIPAA) is published by LiquiDonate, so no Compliance
+  pointer is emitted.
+standards:
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 security scheme. MagicMatch uses static key/secret headers; ReturnsDirect uses HMAC
+    request signing.
+- id: oidc
+  conforms: false
+  evidence: No OpenID Connect discovery document on any host.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors are a flat JSON envelope ({code, error, cause} / {error}), not application/problem+json.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on all three probed hosts.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No deprecation policy and no Sunset/Deprecation headers documented.
+- id: rfc2104-hmac
+  conforms: true
+  evidence: ReturnsDirect signs and verifies both directions with HMAC-SHA256 over the raw request body.
+- id: webhooks
+  conforms: true
+  evidence: ReturnsDirect publishes a 7-event outbound webhook catalog with signed payloads.
+- id: asyncapi
+  conforms: false
+  evidence: LiquiDonate publishes no AsyncAPI document. The one in asyncapi/ is an API Evangelist generation
+    from the published event catalog.
+- id: openapi
+  conforms: false
+  evidence: LiquiDonate publishes no OpenAPI definition. Documentation is a published Postman collection;
+    the specs in openapi/ are API Evangelist reconstructions.
+- id: postman-collection
+  conforms: true
+  evidence: Both APIs are documented as public Postman collections under a custom docs.liquidonate.com
+    domain.
+- id: json-api
+  conforms: false
+  evidence: Plain JSON request and response bodies; no JSON:API envelope.
+- id: pagination
+  conforms: false
+  evidence: No list/collection operation in either API; no pagination surface exists.
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key header or documented replay guard on either API. The match_uuid handoff
+    between estimate and matchAndShip preserves the match and rate but is not documented as an idempotency
+    contract.
+- id: https-tls13
+  conforms: true
+  evidence: All probed hosts negotiate TLSv1.3. See security/liquidonate-domain-security.yml.
+- id: dnssec
+  conforms: true
+  evidence: liquidonate.com is DNSSEC-signed.
+- id: dmarc
+  conforms: true
+  evidence: DMARC record present with policy p=none.

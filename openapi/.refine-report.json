@@ -1,0 +1,22 @@
+{
+  "provider": "liquidonate",
+  "sources": [
+    "liquidonate-donate-api-openapi.yml",
+    "liquidonate-match-api-openapi.yml",
+    "liquidonate-orders-api-openapi.yml",
+    "liquidonate-retailer-api-openapi.yml",
+    "liquidonate-ship-api-openapi.yml"
+  ],
+  "outputs": [
+    "liquidonate-donate-api-openapi.yml",
+    "liquidonate-match-api-openapi.yml",
+    "liquidonate-orders-api-openapi.yml",
+    "liquidonate-retailer-api-openapi.yml",
+    "liquidonate-ship-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

@@ -1,0 +1,39 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/liquidonate-magicmatch-openapi.yml, openapi/liquidonate-returnsdirect-openapi.yml
+note: >-
+  LiquiDonate publishes no Agent Skills or AGENTS.md. These are API Evangelist generated operating
+  instructions, one per marquee flow, grounded in operationIds that exist verbatim in the
+  reconstructed OpenAPI definitions and in the rules published at docs-magicmatch.liquidonate.com and
+  docs-returns.liquidonate.com.
+skills:
+- file: liquidonate-onboard-retailer.md
+  name: Onboard a retailer and issue API credentials
+  api: openapi/liquidonate-magicmatch-openapi.yml
+  operations:
+  - setupRetailer
+  - getRetailer
+- file: liquidonate-match-and-ship-return.md
+  name: Match a return to a nonprofit and ship it
+  api: openapi/liquidonate-magicmatch-openapi.yml
+  operations:
+  - estimateMatchAndShip
+  - matchAndShip
+- file: liquidonate-self-labeled-donation.md
+  name: Match a donation and attach your own shipping label
+  api: openapi/liquidonate-magicmatch-openapi.yml
+  operations:
+  - match
+  - attachLabelsToMatch
+- file: liquidonate-donate-bulky-item.md
+  name: Donate a bulky, multi-package or pickup-scheduled item
+  api: openapi/liquidonate-magicmatch-openapi.yml
+  operations:
+  - donate
+- file: liquidonate-returnsdirect-integration.md
+  name: Integrate ReturnsDirect order push and return webhooks
+  api: openapi/liquidonate-returnsdirect-openapi.yml
+  operations:
+  - pushExternalOrder
+  - onReturnStatusChanged
+  - onRefundStatusChanged

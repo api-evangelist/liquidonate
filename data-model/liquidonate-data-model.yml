@@ -1,0 +1,168 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/liquidonate-magicmatch-openapi.yml, openapi/liquidonate-returnsdirect-openapi.yml
+id_format: RFC 4122 UUID on MagicMatch objects (no type prefixes). ReturnsDirect uses retailer-supplied
+  string ids (externalId, externalLineItemId) plus LiquiDonate integer ids (parcelId) and string rmaId.
+entities:
+- name: Retailer
+  api: MagicMatch
+  key: uuid
+  description: The integrating retailer account. Owns the API key and secret. May have child retailers.
+  relationships:
+  - type: has_many
+    target: User
+    via: user
+  - type: has_many
+    target: Retailer
+    via: retailer_uuid
+    note: Parent to child retailers.
+  - type: has_many
+    target: Match
+    via: api key ownership
+- name: User
+  api: MagicMatch
+  key: uuid
+  description: The person who owns the retailer account.
+  relationships:
+  - type: belongs_to
+    target: Retailer
+    via: retailer
+- name: Match
+  api: MagicMatch
+  key: uuid
+  description: A matching of donated items to a nonprofit, optionally carrying purchased shipping labels.
+  relationships:
+  - type: has_one
+    target: Nonprofit
+    via: nonprofit
+  - type: has_many
+    target: MatchItem
+    via: items
+  - type: has_one
+    target: Label
+    via: label
+  - type: has_many
+    target: Label
+    via: labels
+    note: Populated when multiple labels are attached.
+  - type: has_one
+    target: Location
+    via: sourceLocation
+- name: Nonprofit
+  api: MagicMatch
+  key: organizationName
+  description: The receiving charitable organization selected by the matching engine.
+  relationships:
+  - type: has_one
+    target: Address
+    via: address
+- name: MatchItem
+  api: MagicMatch
+  key: uuid
+  description: An individual donated item within a match.
+  relationships:
+  - type: belongs_to
+    target: Match
+    via: items
+- name: Label
+  api: MagicMatch
+  key: trackingNumber
+  description: A purchased postage label. Carrier-issued tracking number plus a downloadable label image.
+  relationships:
+  - type: belongs_to
+    target: Match
+    via: label
+  - type: has_one
+    target: Rate
+    via: rate
+- name: Rate
+  api: MagicMatch
+  key: null
+  description: Shipping cost for a label, as a decimal string plus currency code.
+- name: Location
+  api: MagicMatch
+  key: null
+  description: A named contactable place. Wraps an Address.
+  relationships:
+  - type: has_one
+    target: Address
+    via: address
+- name: Address
+  api: MagicMatch
+  key: null
+  description: US postal address with optional latitude/longitude. Geocoded by LiquiDonate when omitted.
+- name: DonationItem
+  api: MagicMatch
+  key: uuid
+  description: An item submitted through v1/donate for bulky, multi-package or pickup-scheduled handling.
+  relationships:
+  - type: has_one
+    target: Location
+    via: location
+  - type: has_many
+    target: RequestItemLabel
+    via: requestItemLabels
+  - type: has_one
+    target: PickupHours
+    via: pickupHours
+  - type: has_many
+    target: CategoryType
+    via: categoryTypes
+- name: CategoryType
+  api: MagicMatch
+  key: value
+  description: Controlled vocabulary term describing an item category. 171 published values.
+  vocabulary: vocabulary/liquidonate-category-types.yml
+- name: Order
+  api: ReturnsDirect
+  key: externalId
+  description: A retailer order pushed into ReturnsDirect and cached so the return portal can resolve
+    it.
+  relationships:
+  - type: has_many
+    target: OrderLineItem
+    via: lineItems
+  - type: has_many
+    target: Transaction
+    via: transactions
+  - type: has_many
+    target: ReturnEvent
+    via: externalOrderId
+- name: OrderLineItem
+  api: ReturnsDirect
+  key: externalLineItemId
+  description: A single purchased line on an order. Carries externalFulfillmentLineItemId, which is the
+    id returns are processed against.
+  relationships:
+  - type: belongs_to
+    target: Order
+    via: lineItems
+- name: Transaction
+  api: ReturnsDirect
+  key: id
+  description: A payment transaction on the order. Refunds are issued against transactionId.
+  relationships:
+  - type: belongs_to
+    target: Order
+    via: transactions
+- name: ReturnEvent
+  api: ReturnsDirect
+  key: rmaId
+  description: A return/refund lifecycle event delivered to the retailer webhook. Carries parcelId, rmaId
+    and the externalOrderId that links back to the pushed order.
+  relationships:
+  - type: belongs_to
+    target: Order
+    via: externalOrderId
+lifecycles:
+  return_status:
+  - pending
+  - pending_approval
+  - approved
+  - rejected
+  - cancelled
+  refund_status:
+  - pending
+  - completed
+  - flagged
+render: null

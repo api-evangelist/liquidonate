@@ -1,0 +1,59 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs-returns.liquidonate.com
+summary: LiquiDonate publishes a sandbox host for ReturnsDirect only. MagicMatch documents no separate
+  test environment or test-mode key prefix - retailer credentials are issued per account via v1/setupRetailer,
+  and the documentation demonstrates test accounts (for example "LiquiDonate - Test Child") created through
+  that same production endpoint.
+environments:
+- api: ReturnsDirect by LiquiDonate
+  name: sandbox
+  base_url: https://returns-sandbox.liquidonate.com
+  documented_as: The base_url collection variable in the published ReturnsDirect Postman collection.
+  verified: 2026-07-19 - unsigned POST to /webhooks/external-order returns 400 "Missing X-Shop-Domain
+    or X-Signature header"
+- api: ReturnsDirect by LiquiDonate
+  name: production
+  base_url: https://returns.liquidonate.com
+  verified: 2026-07-19 - same 400 contract as sandbox
+- api: MagicMatch by LiquiDonate
+  name: production
+  base_url: https://api.liquidonate.com
+  note: No separate sandbox host is published.
+  verified: 2026-07-19 - unauthenticated POST returns 401 "invalid api key or secret"
+credentials:
+  magicmatch:
+    model: Per-retailer key and secret issued by v1/setupRetailer.
+    key_prefix: ld_
+    secret_prefix: ld_sk_
+    test_mode_separation: false
+    note: No documented test-vs-live key distinction. Child retailer accounts are the published mechanism
+      for isolating a test integration.
+  returnsdirect:
+    model: Shared HMAC-SHA256 secret provisioned per shop by LiquiDonate, out of band.
+    collection_variables:
+    - name: base_url
+      value: https://returns-sandbox.liquidonate.com
+    - name: shop_domain
+      value: acme.com
+      note: Placeholder. Must match the value LiquiDonate has on file.
+    - name: webhook_secret
+      value: your_shared_secret_here
+      note: Placeholder, not a usable secret.
+    - name: retailer_webhook_url
+      value: https://your-system.com/webhooks/returnsdirect-rms
+      note: Placeholder for the retailer-operated receiver.
+test_fixtures:
+  note: LiquiDonate publishes no magic test identifiers, test cards or trigger values. The documented
+    example payloads (order_99001, rma 1001, parcelId 101) are illustrative sample data, not reserved
+    test values, and are recorded here as examples only.
+  example_order_id: order_99001
+  example_rma_id: '1001'
+  example_parcel_id: 101
+test_clocks:
+  supported: false
+event_triggers:
+  supported: false
+  note: No documented tooling to trigger ReturnsDirect webhook events on demand. The published collection
+    ships the 7 outbound event payloads as example requests you can point at your own receiver to test
+    signature verification and handler logic.

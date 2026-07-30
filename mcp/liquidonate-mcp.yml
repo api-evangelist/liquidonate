@@ -1,0 +1,51 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: openapi/liquidonate-magicmatch-openapi.yml
+note: LiquiDonate publishes NO MCP server. This is a candidate tool surface derived from the reconstructed
+  MagicMatch OpenAPI so the provider can be evaluated for agent readiness. No MCPServer pointer is wired
+  into apis.yml, because no server exists to point at.
+server:
+  name: liquidonate
+  transport: null
+  url: null
+  published: false
+tools:
+- name: liquidonate_setup_retailer
+  description: Register a retailer account and obtain its API key and secret.
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#setupRetailer
+  consequence: write
+- name: liquidonate_get_retailer
+  description: Retrieve the retailer profile for the current credentials.
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#getRetailer
+  consequence: read
+- name: liquidonate_estimate_match_and_ship
+  description: Preview the nonprofit match and shipping rate for a set of items.
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#estimateMatchAndShip
+  consequence: write
+- name: liquidonate_match_and_ship
+  description: Match items to a nonprofit and purchase the donation shipping label.
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#matchAndShip
+  consequence: write
+- name: liquidonate_match
+  description: Match items to a nonprofit without estimating or purchasing shipping.
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#match
+  consequence: write
+- name: liquidonate_attach_labels_to_match
+  description: Attach self-purchased shipping labels to an existing match.
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#attachLabelsToMatch
+  consequence: write
+- name: liquidonate_ship
+  description: Purchase a shipping label between two fixed addresses, with no nonprofit matching.
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#ship
+  consequence: write
+- name: liquidonate_donate
+  description: Submit a bulky, multi-package or pickup-scheduled item for donation handling.
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#donate
+  consequence: write
+agent_guidance:
+- estimateMatchAndShip is the only safe preview operation. matchAndShip, ship and donate all commit real
+  logistics and purchase postage - treat them as physical-consequence writes requiring human confirmation.
+- Label purchase is not idempotent. Never blind-retry matchAndShip or ship; reconcile on the returned
+  trackingNumber first.
+- Route furniture, mattresses, items over 50 kg and Damaged-reason returns to donate, not matchAndShip.

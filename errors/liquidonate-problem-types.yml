@@ -1,0 +1,98 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs-magicmatch.liquidonate.com, https://docs-returns.liquidonate.com
+format: custom-json
+note: LiquiDonate does not use RFC 9457 application/problem+json. Both APIs return a flat JSON error envelope
+  with HTTP status carrying the class of failure.
+envelopes:
+- api: MagicMatch
+  content_type: application/json
+  fields:
+  - field: code
+    description: Machine-readable error code. Present on most 4xx/5xx responses.
+  - field: error
+    description: Human-readable message. Always present.
+  - field: cause
+    description: Underlying cause, when LiquiDonate can surface one.
+- api: ReturnsDirect
+  content_type: application/json
+  fields:
+  - field: error
+    description: Human-readable message. The only field on the ReturnsDirect envelope.
+problems:
+- status: 401
+  code: null
+  title: Invalid API key or secret
+  detail: invalid api key or secret
+  remediation: Send both X-LiquiDonate-Key and X-LiquiDonate-Secret with the values returned by setupRetailer.
+    Verified live against https://api.liquidonate.com on 2026-07-19.
+  api: MagicMatch
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#matchAndShip
+- status: 400
+  code: retrieve_rate_error
+  title: Shipping rate could not be retrieved
+  detail: error buying label
+  remediation: Check the source and destination addresses resolve and the parcel weight is within carrier
+    limits. Items over 50 kg should route to v1/donate.
+  api: MagicMatch
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#matchAndShip
+- status: 500
+  code: retrieve_rate_error
+  title: Shipping rate could not be retrieved
+  detail: error buying label
+  remediation: Same condition as the 400 form, surfaced by v1/ship as a 500. Retry with corrected addresses.
+  api: MagicMatch
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#ship
+- status: 403
+  code: retailer_not_found
+  title: Child retailer not found
+  detail: child retailer not found
+  remediation: The retailer_uuid supplied must be a child retailer linked to the account that owns the
+    API key. Create it with setupRetailer first.
+  api: MagicMatch
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#matchAndShip
+- status: 400
+  code: missing_item_title
+  title: Item is missing a title
+  detail: Item needs to have a title
+  remediation: Supply item.title on every donation payload.
+  api: MagicMatch
+  source_operation: openapi/liquidonate-magicmatch-openapi.yml#donate
+- status: 400
+  code: null
+  title: Missing required fields
+  detail: 'Missing required fields: externalId, orderNumber'
+  remediation: externalId and orderNumber are required on every pushed order.
+  api: ReturnsDirect
+  source_operation: openapi/liquidonate-returnsdirect-openapi.yml#pushExternalOrder
+- status: 400
+  code: null
+  title: Missing signing headers
+  detail: Missing X-Shop-Domain or X-Signature header
+  remediation: Send both X-Shop-Domain and X-Signature. Verified live against https://returns.liquidonate.com
+    on 2026-07-19.
+  api: ReturnsDirect
+  source_operation: openapi/liquidonate-returnsdirect-openapi.yml#pushExternalOrder
+- status: 401
+  code: null
+  title: Invalid signature
+  detail: Invalid signature
+  remediation: X-Signature must be HMAC-SHA256(sharedSecret, rawRequestBody) as lowercase hex, computed
+    over the exact raw bytes sent, not a re-serialized body.
+  api: ReturnsDirect
+  source_operation: openapi/liquidonate-returnsdirect-openapi.yml#pushExternalOrder
+- status: 404
+  code: null
+  title: Order not found
+  detail: Order not found
+  remediation: Returned by the retailer-side order lookup contract when the external order id is unknown.
+  api: ReturnsDirect (retailer-side adapter contract)
+  source_operation: null
+- status: 422
+  code: null
+  title: Return has already been processed
+  detail: Return has already been processed
+  remediation: Returned by the retailer-side process-return contract on a duplicate submission. This is
+    the closest thing either API documents to a replay guard.
+  api: ReturnsDirect (retailer-side adapter contract)
+  source_operation: null

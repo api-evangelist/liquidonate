@@ -1,0 +1,21 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for ReturnsDirect by LiquiDonate
+  version: 1.0.0
+extends: openapi/liquidonate-returnsdirect-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-source: https://docs-returns.liquidonate.com
+    x-apievangelist-reconstructed: true
+    x-apievangelist-note: Reconstructed from the published Postman collection. ReturnsDirect is in Beta.
+    x-apievangelist-generated: '2026-07-19'
+- target: $.paths['/webhooks/external-order'].post
+  update:
+    x-signature-scheme: HMAC-SHA256 over the raw request body, lowercase hex, sent in X-Signature
+    x-verified: true
+    x-verified-method: unsigned POST returns 400 {"error":"Missing X-Shop-Domain or X-Signature header"}
+- target: $.components.securitySchemes.hmacSignature
+  update:
+    x-verification-guidance: Verify inbound LiquiDonate events with a timing-safe comparison (e.g. crypto.timingSafeEqual)
+      against HMAC-SHA256(secret, rawBody).

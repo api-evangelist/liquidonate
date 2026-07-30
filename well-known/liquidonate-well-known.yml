@@ -1,0 +1,60 @@
+generated: '2026-07-19'
+method: searched
+source: live HTTP probe of LiquiDonate public hosts
+summary:
+  hosts_probed: 3
+  documents_found: 0
+  note: >-
+    No /.well-known/ discovery documents are published on any LiquiDonate host.
+    Recorded absence is valid data, not a gap in the probe. The MagicMatch API
+    uses static key/secret headers (no OAuth or OIDC), so the OAuth/OIDC
+    discovery documents are not expected. ReturnsDirect uses HMAC-SHA256 request
+    signing with an out-of-band shared secret, likewise with no discovery surface.
+hosts:
+  - host: https://www.liquidonate.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+  - host: https://api.liquidonate.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+      - path: /openapi.json
+        status: 404
+  - host: https://returns.liquidonate.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+      - path: /openapi.json
+        status: 404
+documents: []
