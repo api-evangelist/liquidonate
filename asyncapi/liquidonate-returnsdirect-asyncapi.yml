@@ -381,3 +381,13 @@ components:
       - status
       - refundStatus
       - updatedAt
+
+# --- API Evangelist provenance -------------------------------------------
+x-superseded-by:
+  reason: >-
+    Provider publishes this event surface themselves in as-published OpenAPI; this document was authored by API Evangelist before that source was harvested.
+  published_spec: all/liquidonate/openapi/_original/liquidonate-returnsdirect-openapi.yml
+  published_event_object: webhooks
+  published_events: 2
+  status: superseded
+  reviewed: '2026-07-31'
