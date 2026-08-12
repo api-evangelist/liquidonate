@@ -171,6 +171,10 @@ apis:
   - type: Postman
     url: https://documenter.getpostman.com/view/28612413/2sBXierZMP
 common:
+- type: MCPServer
+  url: mcp/liquidonate-mcp.yml
+- type: Overlay
+  url: overlays/liquidonate-magicmatch-overlay.yaml
 - type: AgenticAccess
   url: agentic-access/liquidonate-agentic-access.yml
 - url: https://www.liquidonate.com
