@@ -33,7 +33,7 @@ x-backed-by:
 - uncork-capital
 x-tier: enriched
 x-tier-reason: two public developer APIs documented, reconstructed and verified live
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-07-19'
 tags:
