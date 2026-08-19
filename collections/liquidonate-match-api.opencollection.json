@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MagicMatch by LiquiDonate Donate Match API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-LiquiDonate-Key",
+      "value": "{{X-LiquiDonate-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Match",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Estimate a nonprofit match and shipping rate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/matchAndShip/estimate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a nonprofit match and an estimated shipping rate without creating a shipment. Always pass the returned match UUID into v1/matchAndShip so the same nonprofit match and rate are used."
+        },
+        {
+          "info": {
+            "name": "Match items to a nonprofit and buy the donation label",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/matchAndShip",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Matches the supplied items to a nearby nonprofit and purchases a shipping label in one call. Use for standard parcel-shippable items only - furniture, mattresses, drug paraphernalia, items over 50 kg and items returned as Damaged are excluded; route those to v1/donate. Pass `match_uuid` from v1/matchAndShip/estimate to lock in the previewed match and rate."
+        },
+        {
+          "info": {
+            "name": "Match items to a nonprofit",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/match",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a nonprofit match for the supplied items. Does not estimate shipping and does not create a shipment. If you buy your own label you must follow up with v1/match/ship so the nonprofit is notified of the incoming parcel and donation receipts can be generated. Same category, weight and damaged-return exclusions as v1/matchAndShip."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

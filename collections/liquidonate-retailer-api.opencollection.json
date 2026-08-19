@@ -1,0 +1,52 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MagicMatch by LiquiDonate Donate Retailer API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-LiquiDonate-Key",
+      "value": "{{X-LiquiDonate-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Retailer",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Set up a retailer account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/setupRetailer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Registers retailer details and returns the API key and secret used to authenticate every other endpoint. Also used to create child retailers under a parent account."
+        },
+        {
+          "info": {
+            "name": "Retrieve the retailer account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/getRetailer"
+          },
+          "docs": "Returns the retailer profile associated with the API key and secret in the request headers."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

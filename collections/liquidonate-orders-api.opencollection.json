@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MagicMatch by LiquiDonate Donate Orders API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-LiquiDonate-Key",
+      "value": "{{X-LiquiDonate-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Orders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Push an order to ReturnsDirect",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/webhooks/external-order",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends order data to LiquiDonate whenever an order is created or updated in your system. LiquiDonate caches the order so the customer-facing return portal can resolve return eligibility without calling your API. Sign the raw body with HMAC-SHA256 and send the hex digest in `X-Signature`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

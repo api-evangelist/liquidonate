@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MagicMatch by LiquiDonate Donate API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-LiquiDonate-Key",
+      "value": "{{X-LiquiDonate-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Donate",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Request donation handling for bulky, multi-package or pickup items",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/donate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submits an item for donation handling where standard parcel shipping does not apply - large or oversized goods, items needing special handling or manual review, single products shipping across multiple packages (supply `requestItemLabels`), and donations needing a scheduled pickup window (supply `pickupHours`)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

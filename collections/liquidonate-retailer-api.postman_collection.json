@@ -1,0 +1,326 @@
+{
+  "item": [
+    {
+      "id": "78911434-d57b-48a1-ad5b-29e5116070a8",
+      "name": "Retailer",
+      "description": {
+        "content": "Retailer account setup and lookup.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c46923fe-de1a-4cb6-8d03-d0a67525c442",
+          "name": "Set up a retailer account",
+          "request": {
+            "name": "Set up a retailer account",
+            "description": {
+              "content": "Registers retailer details and returns the API key and secret used to authenticate every other endpoint. Also used to create child retailers under a parent account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "setupRetailer"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"retailer\": {\n    \"name\": \"<string>\",\n    \"businessPhoneNumber\": \"<string>\",\n    \"businessAddress\": {\n      \"streetAddress1\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"countryCode\": \"<string>\",\n      \"streetAddress2\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"shopifyShopID\": \"<string>\",\n    \"website\": \"<string>\",\n    \"description\": \"<string>\"\n  },\n  \"user\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "67bbd923-736a-4719-9f84-3283509b7a5e",
+              "name": "Retailer created. Store the returned key and secret securely - they are shown once.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "setupRetailer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"retailer\": {\n    \"name\": \"LiquiDonate - Test Child\",\n    \"businessPhoneNumber\": \"123456789\",\n    \"businessAddress\": {\n      \"streetAddress1\": \"149 New Montgomery Street\",\n      \"streetAddress2\": \"Floor 4\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94105\",\n      \"countryCode\": \"US\"\n    },\n    \"shopifyShopID\": \"1234567890\",\n    \"website\": \"https://www.liquidonate.com\",\n    \"description\": \"https://www.liquidonate.com\"\n  },\n  \"user\": {\n    \"firstName\": \"Aisya\",\n    \"lastName\": \"Aziz\",\n    \"email\": \"aisya@liquidonate.com\",\n    \"phone\": \"1234567890\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"retailer\": {\n    \"uuid\": \"03f1e938-34e3-ee10-5814-0eee5f50015a\",\n    \"name\": \"string\"\n  },\n  \"user\": {\n    \"uuid\": \"8f1aef1a-7a35-0dd5-d79a-e0e878e6f0a6\"\n  },\n  \"apiKey\": {\n    \"key\": \"string\",\n    \"secret\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5730f64e-47c1-4408-a913-016ae7e1d7bd",
+              "name": "Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "setupRetailer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"retailer\": {\n    \"name\": \"LiquiDonate - Test Child\",\n    \"businessPhoneNumber\": \"123456789\",\n    \"businessAddress\": {\n      \"streetAddress1\": \"149 New Montgomery Street\",\n      \"streetAddress2\": \"Floor 4\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94105\",\n      \"countryCode\": \"US\"\n    },\n    \"shopifyShopID\": \"1234567890\",\n    \"website\": \"https://www.liquidonate.com\",\n    \"description\": \"https://www.liquidonate.com\"\n  },\n  \"user\": {\n    \"firstName\": \"Aisya\",\n    \"lastName\": \"Aziz\",\n    \"email\": \"aisya@liquidonate.com\",\n    \"phone\": \"1234567890\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid api key or secret\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "95d96bba-8451-437d-abd2-ae92d5299f1e",
+          "name": "Retrieve the retailer account",
+          "request": {
+            "name": "Retrieve the retailer account",
+            "description": {
+              "content": "Returns the retailer profile associated with the API key and secret in the request headers.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "getRetailer"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "04dc2da5-bba8-407d-b68d-3739affe1cbe",
+              "name": "Retailer profile.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "getRetailer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"retailer\": {\n    \"description\": \"https://www.liquidonate.com\",\n    \"name\": \"LiquiDonate\",\n    \"phone_number\": \"123456789\",\n    \"uuid\": \"bdf80b3a-1dad-4d2f-b5fd-94a6b7f733e2\",\n    \"website\": \"https://www.liquidonate.com\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aa9d8a21-dd65-490c-ade8-157fb17a1888",
+              "name": "Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "getRetailer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid api key or secret\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.liquidonate.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-LiquiDonate-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f028ce5d-ef74-426c-b0dd-08ce8a44db9b",
+    "name": "MagicMatch by LiquiDonate Donate Retailer API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.\n\n**Choosing an endpoint**\n\n- `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.\n- `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.\n- `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.\n- `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.\n- `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.\n- `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.\n\n**Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a \"Damaged\" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.\n\nThis description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.\n\nContact Support:\n Name: LiquiDonate\n Email: sales@liquidonate.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -49,3 +49,9 @@ agent_guidance:
 - Label purchase is not idempotent. Never blind-retry matchAndShip or ship; reconcile on the returned
   trackingNumber first.
 - Route furniture, mattresses, items over 50 kg and Damaged-reason returns to donate, not matchAndShip.
+deployment:
+  mode: none
+  verified: derived
+  tools: 8
+  checked: '2026-08-12'
+  source: catalog MCP census

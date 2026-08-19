@@ -1,0 +1,254 @@
+{
+  "item": [
+    {
+      "id": "944158cf-820a-44e6-aa8b-c1d918a3cb77",
+      "name": "Donate",
+      "description": {
+        "content": "Bulky, multi-package and pickup-scheduled donations.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2ee3caf4-db48-4f27-a07f-8c11f94e3f16",
+          "name": "Request donation handling for bulky, multi-package or pickup items",
+          "request": {
+            "name": "Request donation handling for bulky, multi-package or pickup items",
+            "description": {
+              "content": "Submits an item for donation handling where standard parcel shipping does not apply - large or oversized goods, items needing special handling or manual review, single products shipping across multiple packages (supply `requestItemLabels`), and donations needing a scheduled pickup window (supply `pickupHours`).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "donate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"item\": {\n    \"title\": \"<string>\",\n    \"quantity\": \"<integer>\",\n    \"description\": \"<string>\",\n    \"sizeType\": \"<string>\",\n    \"fulfillmentTypes\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"recipientTypes\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"categoryTypes\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"conditionTagTypes\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"fairMarketValue\": {\n      \"value\": \"<number>\",\n      \"currencyCode\": \"<string>\"\n    },\n    \"imageURLs\": [\n      \"<uri>\",\n      \"<uri>\"\n    ],\n    \"location\": {\n      \"address\": {\n        \"streetAddress1\": \"<string>\",\n        \"city\": \"<string>\",\n        \"state\": \"<string>\",\n        \"zip\": \"<string>\",\n        \"countryCode\": \"<string>\",\n        \"streetAddress2\": \"<string>\",\n        \"latitude\": \"<double>\",\n        \"longitude\": \"<double>\"\n      },\n      \"name\": \"<string>\",\n      \"contactNumber\": \"<string>\",\n      \"contactEmail\": \"<string>\",\n      \"notes\": \"<string>\"\n    },\n    \"unitType\": \"<string>\",\n    \"weightLbs\": \"<double>\",\n    \"lengthInches\": \"<number>\",\n    \"heightInches\": \"<number>\",\n    \"widthInches\": \"<number>\",\n    \"requestItemLabels\": [\n      {\n        \"weightInLbs\": \"<number>\"\n      },\n      {\n        \"weightInLbs\": \"<number>\"\n      }\n    ],\n    \"pickupHours\": {\n      \"timezone\": \"<string>\",\n      \"pickupIntervals\": [\n        {\n          \"days\": [\n            \"<string>\",\n            \"<string>\"\n          ],\n          \"startTimeLocal\": \"<string>\",\n          \"endTimeLocal\": \"<string>\"\n        },\n        {\n          \"days\": [\n            \"<string>\",\n            \"<string>\"\n          ],\n          \"startTimeLocal\": \"<string>\",\n          \"endTimeLocal\": \"<string>\"\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c89f3e3f-0d3a-43e1-8239-c238344be3ac",
+              "name": "Donation request accepted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "donate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"item\": {\n    \"title\": \"Example Item\",\n    \"quantity\": 1,\n    \"description\": \"This is an example description.\",\n    \"sizeType\": \"medium\",\n    \"fulfillmentTypes\": [\n      \"pickup\"\n    ],\n    \"recipientTypes\": [\n      \"nonprofit\"\n    ],\n    \"categoryTypes\": [\n      \"electronics\"\n    ],\n    \"fairMarketValue\": {\n      \"value\": 100,\n      \"currencyCode\": \"USD\"\n    },\n    \"conditionTagTypes\": [\n      \"new\"\n    ],\n    \"location\": {\n      \"name\": \"Aisya\",\n      \"contactNumber\": \"4125124729\",\n      \"address\": {\n        \"streetAddress1\": \"123 Main St\",\n        \"streetAddress2\": null,\n        \"city\": \"New York\",\n        \"state\": \"NY\",\n        \"zip\": \"10001\",\n        \"countryCode\": \"US\",\n        \"latitude\": 40.7128,\n        \"longitude\": -74.006\n      }\n    },\n    \"unitType\": \"individual_item\",\n    \"weightLbs\": 2.5,\n    \"lengthInches\": 10,\n    \"heightInches\": 5,\n    \"widthInches\": 3,\n    \"pickupHours\": {\n      \"timezone\": \"America/Los_Angeles\",\n      \"pickupIntervals\": [\n        {\n          \"days\": [\n            \"monday\",\n            \"tuesday\"\n          ],\n          \"startTimeLocal\": \"10:00\",\n          \"endTimeLocal\": \"12:00\"\n        }\n      ]\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"item\": {\n    \"uuid\": \"efab1900-3dd3-48b6-9f1a-1c8ac58ccbec\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6a4f7432-d594-4393-8574-465c03dc1fdc",
+              "name": "Validation failed on the item payload.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "donate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"item\": {\n    \"title\": \"Example Item\",\n    \"quantity\": 1,\n    \"description\": \"This is an example description.\",\n    \"sizeType\": \"medium\",\n    \"fulfillmentTypes\": [\n      \"pickup\"\n    ],\n    \"recipientTypes\": [\n      \"nonprofit\"\n    ],\n    \"categoryTypes\": [\n      \"electronics\"\n    ],\n    \"fairMarketValue\": {\n      \"value\": 100,\n      \"currencyCode\": \"USD\"\n    },\n    \"conditionTagTypes\": [\n      \"new\"\n    ],\n    \"location\": {\n      \"name\": \"Aisya\",\n      \"contactNumber\": \"4125124729\",\n      \"address\": {\n        \"streetAddress1\": \"123 Main St\",\n        \"streetAddress2\": null,\n        \"city\": \"New York\",\n        \"state\": \"NY\",\n        \"zip\": \"10001\",\n        \"countryCode\": \"US\",\n        \"latitude\": 40.7128,\n        \"longitude\": -74.006\n      }\n    },\n    \"unitType\": \"individual_item\",\n    \"weightLbs\": 2.5,\n    \"lengthInches\": 10,\n    \"heightInches\": 5,\n    \"widthInches\": 3,\n    \"pickupHours\": {\n      \"timezone\": \"America/Los_Angeles\",\n      \"pickupIntervals\": [\n        {\n          \"days\": [\n            \"monday\",\n            \"tuesday\"\n          ],\n          \"startTimeLocal\": \"10:00\",\n          \"endTimeLocal\": \"12:00\"\n        }\n      ]\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"missing_item_title\",\n  \"error\": \"Item needs to have a title\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "097e1cea-903d-457d-a320-67cda6148108",
+              "name": "Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "donate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"item\": {\n    \"title\": \"Example Item\",\n    \"quantity\": 1,\n    \"description\": \"This is an example description.\",\n    \"sizeType\": \"medium\",\n    \"fulfillmentTypes\": [\n      \"pickup\"\n    ],\n    \"recipientTypes\": [\n      \"nonprofit\"\n    ],\n    \"categoryTypes\": [\n      \"electronics\"\n    ],\n    \"fairMarketValue\": {\n      \"value\": 100,\n      \"currencyCode\": \"USD\"\n    },\n    \"conditionTagTypes\": [\n      \"new\"\n    ],\n    \"location\": {\n      \"name\": \"Aisya\",\n      \"contactNumber\": \"4125124729\",\n      \"address\": {\n        \"streetAddress1\": \"123 Main St\",\n        \"streetAddress2\": null,\n        \"city\": \"New York\",\n        \"state\": \"NY\",\n        \"zip\": \"10001\",\n        \"countryCode\": \"US\",\n        \"latitude\": 40.7128,\n        \"longitude\": -74.006\n      }\n    },\n    \"unitType\": \"individual_item\",\n    \"weightLbs\": 2.5,\n    \"lengthInches\": 10,\n    \"heightInches\": 5,\n    \"widthInches\": 3,\n    \"pickupHours\": {\n      \"timezone\": \"America/Los_Angeles\",\n      \"pickupIntervals\": [\n        {\n          \"days\": [\n            \"monday\",\n            \"tuesday\"\n          ],\n          \"startTimeLocal\": \"10:00\",\n          \"endTimeLocal\": \"12:00\"\n        }\n      ]\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid api key or secret\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.liquidonate.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-LiquiDonate-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d51e19e4-afc4-4b9b-8a9e-445f0ebc7d78",
+    "name": "MagicMatch by LiquiDonate Donate API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.\n\n**Choosing an endpoint**\n\n- `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.\n- `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.\n- `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.\n- `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.\n- `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.\n- `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.\n\n**Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a \"Damaged\" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.\n\nThis description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.\n\nContact Support:\n Name: LiquiDonate\n Email: sales@liquidonate.com",
+      "type": "text/plain"
+    }
+  }
+}

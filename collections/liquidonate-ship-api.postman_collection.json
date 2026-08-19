@@ -1,0 +1,667 @@
+{
+  "item": [
+    {
+      "id": "67e5e461-b852-4fce-87a7-6921835f6a80",
+      "name": "Ship",
+      "description": {
+        "content": "Purchase donation shipping labels.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "837cb3e3-2d7e-480e-9bd4-76a59d11b9bc",
+          "name": "Match items to a nonprofit and buy the donation label",
+          "request": {
+            "name": "Match items to a nonprofit and buy the donation label",
+            "description": {
+              "content": "Matches the supplied items to a nearby nonprofit and purchases a shipping label in one call. Use for standard parcel-shippable items only - furniture, mattresses, drug paraphernalia, items over 50 kg and items returned as Damaged are excluded; route those to v1/donate. Pass `match_uuid` from v1/matchAndShip/estimate to lock in the previewed match and rate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "matchAndShip"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"donor\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"contactNumber\": \"<string>\"\n  },\n  \"location\": {\n    \"address\": {\n      \"streetAddress1\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"countryCode\": \"<string>\",\n      \"streetAddress2\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"name\": \"<string>\",\n    \"contactNumber\": \"<string>\",\n    \"contactEmail\": \"<string>\",\n    \"notes\": \"<string>\"\n  },\n  \"items\": [\n    {\n      \"title\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"sku\": \"<string>\",\n      \"description\": \"<string>\",\n      \"price\": \"<string>\",\n      \"categoryTypes\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"conditionTagTypes\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"weightLbs\": \"<double>\"\n    },\n    {\n      \"title\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"sku\": \"<string>\",\n      \"description\": \"<string>\",\n      \"price\": \"<string>\",\n      \"categoryTypes\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"conditionTagTypes\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"weightLbs\": \"<double>\"\n    }\n  ],\n  \"parcel\": {\n    \"weight\": \"<double>\"\n  },\n  \"match_uuid\": \"<uuid>\",\n  \"order_id\": \"<string>\",\n  \"rma_id\": \"<string>\",\n  \"retailer_uuid\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ea30fcc3-f994-4424-84f5-92f9e28101d3",
+              "name": "Match created and label purchased.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "matchAndShip"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"donor\": {\n    \"firstName\": \"Test\",\n    \"lastName\": \"ABV\",\n    \"email\": \"hello@abc.com\",\n    \"contactNumber\": \"5555555555\"\n  },\n  \"location\": {\n    \"address\": {\n      \"streetAddress1\": \"190 Founders Prom\",\n      \"city\": \"Getzville\",\n      \"state\": \"NY\",\n      \"zip\": \"14068\",\n      \"countryCode\": \"US\"\n    }\n  },\n  \"parcel\": {\n    \"weight\": 2.7\n  },\n  \"items\": [\n    {\n      \"title\": \"Original Bag - Ivory\",\n      \"sku\": \"ABV001\",\n      \"description\": \"\",\n      \"quantity\": 1,\n      \"categoryTypes\": [\n        \"feminine\"\n      ],\n      \"weightLbs\": 2.5\n    },\n    {\n      \"title\": \"Stroller Straps - Ivory\",\n      \"sku\": \"ABV332\",\n      \"description\": \"\",\n      \"quantity\": 1,\n      \"categoryTypes\": [\n        \"feminine\"\n      ],\n      \"weightLbs\": 0.18\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"match\": {\n    \"uuid\": \"0509dc14-dd2d-4e36-812b-52a4b2765255\",\n    \"nonprofit\": {\n      \"organizationName\": \"Woodstock Area Counsel On Aging\",\n      \"website\": \"https://woodstockareacounselonaging.org\",\n      \"address\": {\n        \"streetAddress1\": \"149 New Montgomery St.\",\n        \"streetAddress2\": null,\n        \"city\": \"San Francisco\",\n        \"state\": \"CA\",\n        \"zip\": \"94105\",\n        \"countryCode\": \"US\",\n        \"latitude\": 38.77497,\n        \"longitude\": -122.431297\n      }\n    },\n    \"distanceMiles\": \"0\",\n    \"items\": [\n      {\n        \"uuid\": \"6e781121-14ce-4fdd-86cf-918f6472adca\",\n        \"title\": \"MacBook Pro 13\",\n        \"sku\": \"500\",\n        \"quantity\": \"3\",\n        \"weight\": 4\n      }\n    ],\n    \"label\": {\n      \"trackingNumber\": \"9405500110368049165575\",\n      \"carrier\": \"USPS\",\n      \"labelURL\": \"https://easypost-files.s3.us-west-2.amazonaws.com/files/postage_label/20240607/e850f7940ff8b84b3bb6eb5bd8d24fac73.png\",\n      \"rate\": {\n        \"id\": \"\",\n        \"shipment_detail\": null,\n        \"value\": \"38.33\",\n        \"currencyCode\": \"USD\"\n      }\n    },\n    \"sourceLocation\": {\n      \"name\": \"\",\n      \"contactNumber\": \"\",\n      \"address\": {\n        \"streetAddress1\": \"149 New Montgomery St.\",\n        \"streetAddress2\": null,\n        \"city\": \"San Francisco\",\n        \"state\": \"CA\",\n        \"zip\": \"94105\",\n        \"countryCode\": \"US\",\n        \"latitude\": 38.77497,\n        \"longitude\": -122.431297\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8d5b3e52-5941-43e8-9942-1dbf82f8072a",
+              "name": "Rate could not be retrieved or the label could not be purchased.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "matchAndShip"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"donor\": {\n    \"firstName\": \"Test\",\n    \"lastName\": \"ABV\",\n    \"email\": \"hello@abc.com\",\n    \"contactNumber\": \"5555555555\"\n  },\n  \"location\": {\n    \"address\": {\n      \"streetAddress1\": \"190 Founders Prom\",\n      \"city\": \"Getzville\",\n      \"state\": \"NY\",\n      \"zip\": \"14068\",\n      \"countryCode\": \"US\"\n    }\n  },\n  \"parcel\": {\n    \"weight\": 2.7\n  },\n  \"items\": [\n    {\n      \"title\": \"Original Bag - Ivory\",\n      \"sku\": \"ABV001\",\n      \"description\": \"\",\n      \"quantity\": 1,\n      \"categoryTypes\": [\n        \"feminine\"\n      ],\n      \"weightLbs\": 2.5\n    },\n    {\n      \"title\": \"Stroller Straps - Ivory\",\n      \"sku\": \"ABV332\",\n      \"description\": \"\",\n      \"quantity\": 1,\n      \"categoryTypes\": [\n        \"feminine\"\n      ],\n      \"weightLbs\": 0.18\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"cause\": \"error buying label\",\n  \"code\": \"retrieve_rate_error\",\n  \"error\": \"error buying label\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "26fbcfc7-3474-47ef-802c-fa8bde867b20",
+              "name": "Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "matchAndShip"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"donor\": {\n    \"firstName\": \"Test\",\n    \"lastName\": \"ABV\",\n    \"email\": \"hello@abc.com\",\n    \"contactNumber\": \"5555555555\"\n  },\n  \"location\": {\n    \"address\": {\n      \"streetAddress1\": \"190 Founders Prom\",\n      \"city\": \"Getzville\",\n      \"state\": \"NY\",\n      \"zip\": \"14068\",\n      \"countryCode\": \"US\"\n    }\n  },\n  \"parcel\": {\n    \"weight\": 2.7\n  },\n  \"items\": [\n    {\n      \"title\": \"Original Bag - Ivory\",\n      \"sku\": \"ABV001\",\n      \"description\": \"\",\n      \"quantity\": 1,\n      \"categoryTypes\": [\n        \"feminine\"\n      ],\n      \"weightLbs\": 2.5\n    },\n    {\n      \"title\": \"Stroller Straps - Ivory\",\n      \"sku\": \"ABV332\",\n      \"description\": \"\",\n      \"quantity\": 1,\n      \"categoryTypes\": [\n        \"feminine\"\n      ],\n      \"weightLbs\": 0.18\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid api key or secret\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c2cb59f3-8fd0-4bd3-9ca1-c3301ef0636f",
+              "name": "The `retailer_uuid` supplied is not a child retailer of the account that owns the API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "matchAndShip"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"donor\": {\n    \"firstName\": \"Test\",\n    \"lastName\": \"ABV\",\n    \"email\": \"hello@abc.com\",\n    \"contactNumber\": \"5555555555\"\n  },\n  \"location\": {\n    \"address\": {\n      \"streetAddress1\": \"190 Founders Prom\",\n      \"city\": \"Getzville\",\n      \"state\": \"NY\",\n      \"zip\": \"14068\",\n      \"countryCode\": \"US\"\n    }\n  },\n  \"parcel\": {\n    \"weight\": 2.7\n  },\n  \"items\": [\n    {\n      \"title\": \"Original Bag - Ivory\",\n      \"sku\": \"ABV001\",\n      \"description\": \"\",\n      \"quantity\": 1,\n      \"categoryTypes\": [\n        \"feminine\"\n      ],\n      \"weightLbs\": 2.5\n    },\n    {\n      \"title\": \"Stroller Straps - Ivory\",\n      \"sku\": \"ABV332\",\n      \"description\": \"\",\n      \"quantity\": 1,\n      \"categoryTypes\": [\n        \"feminine\"\n      ],\n      \"weightLbs\": 0.18\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"retailer_not_found\",\n  \"error\": \"child retailer not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "68d0dc11-78d7-4236-9997-c0a78703c766",
+          "name": "Attach your own shipping labels to a match",
+          "request": {
+            "name": "Attach your own shipping labels to a match",
+            "description": {
+              "content": "Updates an existing match with labels you purchased yourself. Required after v1/match when you generate your own postage, so the receiving nonprofit is notified and donation receipts can be issued.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "match",
+                "ship"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"match_uuid\": \"<uuid>\",\n  \"labels\": [\n    {\n      \"tracking_number\": \"<string>\",\n      \"carrier\": \"<string>\",\n      \"rate\": {\n        \"amount\": \"<number>\",\n        \"currencyCode\": \"<string>\"\n      }\n    },\n    {\n      \"tracking_number\": \"<string>\",\n      \"carrier\": \"<string>\",\n      \"rate\": {\n        \"amount\": \"<number>\",\n        \"currencyCode\": \"<string>\"\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "df5b863c-63c3-4f0c-84dc-c26df6c91545",
+              "name": "Match updated with the supplied labels.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "match",
+                    "ship"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"match_uuid\": \"fcb6bd00-94e5-4e9d-afeb-c95515f4285a\",\n  \"labels\": [\n    {\n      \"tracking_number\": \"12312312312\",\n      \"carrier\": \"USPS\",\n      \"rate\": {\n        \"amount\": 10.2,\n        \"currencyCode\": \"USD\"\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"match\": {\n    \"uuid\": \"8244380d-5d96-3816-ca51-6f5e5259a29c\",\n    \"rma_id\": \"string\",\n    \"nonprofit\": {\n      \"organizationName\": \"Woodstock Area Counsel On Aging\",\n      \"website\": \"https://woodstockareacounselonaging.org\",\n      \"address\": {\n        \"streetAddress1\": \"149 New Montgomery St.\",\n        \"city\": \"San Francisco\",\n        \"state\": \"CA\",\n        \"zip\": \"94105\",\n        \"countryCode\": \"US\",\n        \"streetAddress2\": \"Floor 4\",\n        \"latitude\": 38.77497,\n        \"longitude\": -122.431297\n      }\n    },\n    \"distanceMiles\": \"7.38\",\n    \"rate\": \"36.94\",\n    \"items\": [\n      {\n        \"uuid\": \"9c84ff9f-9800-a82f-49d0-e1a83c78fb6b\",\n        \"title\": \"string\",\n        \"sku\": \"string\",\n        \"quantity\": \"string\",\n        \"weight\": 638.809628194833\n      },\n      {\n        \"uuid\": \"6415ff0d-0361-7856-98e0-6eaec866b877\",\n        \"title\": \"string\",\n        \"sku\": \"string\",\n        \"quantity\": \"string\",\n        \"weight\": 7092.875036933551\n      }\n    ],\n    \"label\": {\n      \"trackingNumber\": \"9405500110368049165575\",\n      \"carrier\": \"USPS\",\n      \"labelURL\": \"http://FoiKldAevLtLGF.rerJwwn\",\n      \"rate\": {\n        \"id\": \"string\",\n        \"shipment_detail\": {},\n        \"value\": \"38.33\",\n        \"currencyCode\": \"USD\"\n      }\n    },\n    \"labels\": [\n      {\n        \"trackingNumber\": \"9405500110368049165575\",\n        \"carrier\": \"USPS\",\n        \"labelURL\": \"http://EQKQaaZkGMPhlODPuuylpM.xgfXFSD9zumRVZECf8LgEdqX\",\n        \"rate\": {\n          \"id\": \"string\",\n          \"shipment_detail\": {},\n          \"value\": \"38.33\",\n          \"currencyCode\": \"USD\"\n        }\n      },\n      {\n        \"trackingNumber\": \"9405500110368049165575\",\n        \"carrier\": \"USPS\",\n        \"labelURL\": \"https://OZra.zwOg60aKW\",\n        \"rate\": {\n          \"id\": \"string\",\n          \"shipment_detail\": {},\n          \"value\": \"38.33\",\n          \"currencyCode\": \"USD\"\n        }\n      }\n    ],\n    \"sourceLocation\": {\n      \"address\": {\n        \"streetAddress1\": \"149 New Montgomery St.\",\n        \"city\": \"San Francisco\",\n        \"state\": \"CA\",\n        \"zip\": \"94105\",\n        \"countryCode\": \"US\",\n        \"streetAddress2\": \"Floor 4\",\n        \"latitude\": 38.77497,\n        \"longitude\": -122.431297\n      },\n      \"name\": \"string\",\n      \"contactNumber\": \"string\",\n      \"contactEmail\": \"string\",\n      \"notes\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7bc340a5-afa0-4c05-89f4-f06ee55bdaf1",
+              "name": "Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "match",
+                    "ship"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"match_uuid\": \"fcb6bd00-94e5-4e9d-afeb-c95515f4285a\",\n  \"labels\": [\n    {\n      \"tracking_number\": \"12312312312\",\n      \"carrier\": \"USPS\",\n      \"rate\": {\n        \"amount\": 10.2,\n        \"currencyCode\": \"USD\"\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid api key or secret\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9e3b3450-04f7-4cb1-bdc4-ea48ca3a0b85",
+          "name": "Buy a shipping label between two fixed addresses",
+          "request": {
+            "name": "Buy a shipping label between two fixed addresses",
+            "description": {
+              "content": "Creates a shipment from a known source address to a known destination address. Performs no nonprofit matching and generates no donation receipts. Use for warehouse, fulfillment-center or store-originated returns where the destination is already fixed. Do not combine with v1/match - they are separate workflows.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "ship"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source_location\": {\n    \"address\": {\n      \"streetAddress1\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"countryCode\": \"<string>\",\n      \"streetAddress2\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"name\": \"<string>\",\n    \"contactNumber\": \"<string>\",\n    \"contactEmail\": \"<string>\",\n    \"notes\": \"<string>\"\n  },\n  \"destination_location\": {\n    \"address\": {\n      \"streetAddress1\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zip\": \"<string>\",\n      \"countryCode\": \"<string>\",\n      \"streetAddress2\": \"<string>\",\n      \"latitude\": \"<double>\",\n      \"longitude\": \"<double>\"\n    },\n    \"name\": \"<string>\",\n    \"contactNumber\": \"<string>\",\n    \"contactEmail\": \"<string>\",\n    \"notes\": \"<string>\"\n  },\n  \"parcel\": {\n    \"weight\": \"<double>\"\n  },\n  \"donor\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"contactNumber\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cb3fe703-7c61-492f-93ff-c550736acdba",
+              "name": "Label purchased.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "ship"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"donor\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@liquidonate.com\",\n    \"contactNumber\": \"123456789\"\n  },\n  \"source_location\": {\n    \"address\": {\n      \"streetAddress1\": \"149 New Montgomery St.\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94105\",\n      \"countryCode\": \"US\",\n      \"latitude\": 38.77497,\n      \"longitude\": -122.431297\n    }\n  },\n  \"destination_location\": {\n    \"address\": {\n      \"streetAddress1\": \"1007 sutter st\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94109\",\n      \"countryCode\": \"US\",\n      \"latitude\": 37.78798780105987,\n      \"longitude\": -122.41700768673985\n    }\n  },\n  \"parcel\": {\n    \"weight\": 15\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"from\": {\n    \"address\": {\n      \"streetAddress1\": \"149 New Montgomery St.\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94105\",\n      \"countryCode\": \"US\",\n      \"streetAddress2\": \"Floor 4\",\n      \"latitude\": 38.77497,\n      \"longitude\": -122.431297\n    },\n    \"name\": \"string\",\n    \"contactNumber\": \"string\",\n    \"contactEmail\": \"string\",\n    \"notes\": \"string\"\n  },\n  \"to\": {\n    \"address\": {\n      \"streetAddress1\": \"149 New Montgomery St.\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94105\",\n      \"countryCode\": \"US\",\n      \"streetAddress2\": \"Floor 4\",\n      \"latitude\": 38.77497,\n      \"longitude\": -122.431297\n    },\n    \"name\": \"string\",\n    \"contactNumber\": \"string\",\n    \"contactEmail\": \"string\",\n    \"notes\": \"string\"\n  },\n  \"label\": {\n    \"trackingNumber\": \"9405500110368049165575\",\n    \"carrier\": \"USPS\",\n    \"labelURL\": \"http://WsbKUsVapnaIcpzZKtIAyfyJhhMUqV.ymuur,FOmifWK.E7oZMNg,,U-\",\n    \"rate\": {\n      \"id\": \"string\",\n      \"shipment_detail\": {},\n      \"value\": \"38.33\",\n      \"currencyCode\": \"USD\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a0c24b28-6e49-4bc9-82f5-4e6fb5bc40b9",
+              "name": "Missing or invalid API key/secret. Verified live against https://api.liquidonate.com.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "ship"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"donor\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@liquidonate.com\",\n    \"contactNumber\": \"123456789\"\n  },\n  \"source_location\": {\n    \"address\": {\n      \"streetAddress1\": \"149 New Montgomery St.\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94105\",\n      \"countryCode\": \"US\",\n      \"latitude\": 38.77497,\n      \"longitude\": -122.431297\n    }\n  },\n  \"destination_location\": {\n    \"address\": {\n      \"streetAddress1\": \"1007 sutter st\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94109\",\n      \"countryCode\": \"US\",\n      \"latitude\": 37.78798780105987,\n      \"longitude\": -122.41700768673985\n    }\n  },\n  \"parcel\": {\n    \"weight\": 15\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid api key or secret\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cc25c3be-58c4-4cdb-9f64-01cb9be9eb4b",
+              "name": "Rate could not be retrieved or the label could not be purchased.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "ship"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"donor\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@liquidonate.com\",\n    \"contactNumber\": \"123456789\"\n  },\n  \"source_location\": {\n    \"address\": {\n      \"streetAddress1\": \"149 New Montgomery St.\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94105\",\n      \"countryCode\": \"US\",\n      \"latitude\": 38.77497,\n      \"longitude\": -122.431297\n    }\n  },\n  \"destination_location\": {\n    \"address\": {\n      \"streetAddress1\": \"1007 sutter st\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"zip\": \"94109\",\n      \"countryCode\": \"US\",\n      \"latitude\": 37.78798780105987,\n      \"longitude\": -122.41700768673985\n    }\n  },\n  \"parcel\": {\n    \"weight\": 15\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"cause\": \"error buying label\",\n  \"code\": \"retrieve_rate_error\",\n  \"error\": \"error buying label\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.liquidonate.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-LiquiDonate-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "846ff556-927b-4269-b156-4685c5ebcc9f",
+    "name": "MagicMatch by LiquiDonate Donate Ship API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.\n\n**Choosing an endpoint**\n\n- `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.\n- `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.\n- `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.\n- `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.\n- `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.\n- `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.\n\n**Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a \"Damaged\" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.\n\nThis description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.\n\nContact Support:\n Name: LiquiDonate\n Email: sales@liquidonate.com",
+      "type": "text/plain"
+    }
+  }
+}

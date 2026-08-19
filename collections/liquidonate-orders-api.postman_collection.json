@@ -1,0 +1,254 @@
+{
+  "item": [
+    {
+      "id": "e18d6017-c069-4f61-9996-f620b5603e8e",
+      "name": "Orders",
+      "description": {
+        "content": "Push order data into ReturnsDirect.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "050dd135-ae34-4ac8-a67b-cd4763df9339",
+          "name": "Push an order to ReturnsDirect",
+          "request": {
+            "name": "Push an order to ReturnsDirect",
+            "description": {
+              "content": "Sends order data to LiquiDonate whenever an order is created or updated in your system. LiquiDonate caches the order so the customer-facing return portal can resolve return eligibility without calling your API. Sign the raw body with HMAC-SHA256 and send the hex digest in `X-Signature`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "webhooks",
+                "external-order"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"externalId\": \"<string>\",\n  \"orderNumber\": \"<string>\",\n  \"confirmationNumber\": \"<string>\",\n  \"orderDate\": \"<dateTime>\",\n  \"customerName\": \"<string>\",\n  \"customerEmail\": \"<email>\",\n  \"customerPhone\": \"<string>\",\n  \"shippingAddress1\": \"<string>\",\n  \"shippingAddress2\": \"<string>\",\n  \"shippingCity\": \"<string>\",\n  \"shippingState\": \"<string>\",\n  \"shippingZip\": \"<string>\",\n  \"shippingCountry\": \"<string>\",\n  \"shippingPhone\": \"<string>\",\n  \"shippingLatitude\": \"<number>\",\n  \"shippingLongitude\": \"<number>\",\n  \"originalShippingFee\": \"<number>\",\n  \"shippingTaxAmount\": \"<number>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"transactions\": [\n    {\n      \"id\": \"<string>\",\n      \"kind\": \"<string>\",\n      \"status\": \"<string>\",\n      \"amount\": \"<number>\",\n      \"currency\": \"<string>\",\n      \"paymentMethod\": \"<string>\",\n      \"createdAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"kind\": \"<string>\",\n      \"status\": \"<string>\",\n      \"amount\": \"<number>\",\n      \"currency\": \"<string>\",\n      \"paymentMethod\": \"<string>\",\n      \"createdAt\": \"<dateTime>\"\n    }\n  ],\n  \"lineItems\": [\n    {\n      \"externalLineItemId\": \"<string>\",\n      \"externalFulfillmentLineItemId\": \"<string>\",\n      \"externalVariantId\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"sku\": \"<string>\",\n      \"imageUrl\": \"<uri>\",\n      \"quantity\": \"<integer>\",\n      \"pricePerUnit\": \"<number>\",\n      \"discountAmountPerUnit\": \"<number>\",\n      \"total\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"weightUnit\": \"<string>\",\n      \"collectionIds\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"categoryTypes\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"tags\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"externalLineItemId\": \"<string>\",\n      \"externalFulfillmentLineItemId\": \"<string>\",\n      \"externalVariantId\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"sku\": \"<string>\",\n      \"imageUrl\": \"<uri>\",\n      \"quantity\": \"<integer>\",\n      \"pricePerUnit\": \"<number>\",\n      \"discountAmountPerUnit\": \"<number>\",\n      \"total\": \"<number>\",\n      \"weight\": \"<number>\",\n      \"weightUnit\": \"<string>\",\n      \"collectionIds\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"categoryTypes\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"tags\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "78c217c1-b86c-479d-be69-d208b41dc7ae",
+              "name": "Order stored.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "webhooks",
+                    "external-order"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"order_99001\",\n  \"orderNumber\": \"#1001\",\n  \"confirmationNumber\": \"CONF-99001\",\n  \"orderDate\": \"2026-03-01T10:00:00Z\",\n  \"customerName\": \"Jane Smith\",\n  \"customerEmail\": \"jane@example.com\",\n  \"customerPhone\": \"+1-555-0100\",\n  \"shippingAddress1\": \"123 Main St\",\n  \"shippingAddress2\": \"Apt 4B\",\n  \"shippingCity\": \"Austin\",\n  \"shippingState\": \"TX\",\n  \"shippingZip\": \"78701\",\n  \"shippingCountry\": \"US\",\n  \"shippingPhone\": \"+1-555-0100\",\n  \"shippingLatitude\": 30.2672,\n  \"shippingLongitude\": -97.7431,\n  \"originalShippingFee\": 9.99,\n  \"shippingTaxAmount\": 0.82,\n  \"tags\": [\n    \"vip\",\n    \"spring-promo\"\n  ],\n  \"transactions\": [\n    {\n      \"id\": \"txn_abc123\",\n      \"kind\": \"sale\",\n      \"status\": \"success\",\n      \"amount\": 149.97,\n      \"currency\": \"USD\",\n      \"paymentMethod\": \"visa\",\n      \"createdAt\": \"2026-03-01T10:01:00Z\"\n    }\n  ],\n  \"lineItems\": [\n    {\n      \"externalLineItemId\": \"li_001\",\n      \"externalFulfillmentLineItemId\": \"fli_001\",\n      \"externalVariantId\": \"var_blue_md\",\n      \"title\": \"Classic T-Shirt\",\n      \"description\": \"100% cotton crew neck\",\n      \"sku\": \"TSHIRT-BLUE-MD\",\n      \"imageUrl\": \"https://cdn.acme.com/products/tshirt-blue.jpg\",\n      \"quantity\": 2,\n      \"pricePerUnit\": 49.99,\n      \"discountAmountPerUnit\": 5,\n      \"total\": 89.98,\n      \"weight\": 0.3,\n      \"weightUnit\": \"KILOGRAMS\",\n      \"collectionIds\": [\n        \"col_apparel\",\n        \"col_summer\"\n      ],\n      \"categoryTypes\": [\n        \"clothing\"\n      ],\n      \"tags\": [\n        \"final-sale\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"id\": 42\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3697b5f3-2d4b-4ee3-a1ab-22d45a994e19",
+              "name": "Missing required fields, or missing signing headers. Verified live: a request without headers returns {\"error\":\"Missing X-Shop-Domain or X-Signature header\"}.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "webhooks",
+                    "external-order"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"order_99001\",\n  \"orderNumber\": \"#1001\",\n  \"confirmationNumber\": \"CONF-99001\",\n  \"orderDate\": \"2026-03-01T10:00:00Z\",\n  \"customerName\": \"Jane Smith\",\n  \"customerEmail\": \"jane@example.com\",\n  \"customerPhone\": \"+1-555-0100\",\n  \"shippingAddress1\": \"123 Main St\",\n  \"shippingAddress2\": \"Apt 4B\",\n  \"shippingCity\": \"Austin\",\n  \"shippingState\": \"TX\",\n  \"shippingZip\": \"78701\",\n  \"shippingCountry\": \"US\",\n  \"shippingPhone\": \"+1-555-0100\",\n  \"shippingLatitude\": 30.2672,\n  \"shippingLongitude\": -97.7431,\n  \"originalShippingFee\": 9.99,\n  \"shippingTaxAmount\": 0.82,\n  \"tags\": [\n    \"vip\",\n    \"spring-promo\"\n  ],\n  \"transactions\": [\n    {\n      \"id\": \"txn_abc123\",\n      \"kind\": \"sale\",\n      \"status\": \"success\",\n      \"amount\": 149.97,\n      \"currency\": \"USD\",\n      \"paymentMethod\": \"visa\",\n      \"createdAt\": \"2026-03-01T10:01:00Z\"\n    }\n  ],\n  \"lineItems\": [\n    {\n      \"externalLineItemId\": \"li_001\",\n      \"externalFulfillmentLineItemId\": \"fli_001\",\n      \"externalVariantId\": \"var_blue_md\",\n      \"title\": \"Classic T-Shirt\",\n      \"description\": \"100% cotton crew neck\",\n      \"sku\": \"TSHIRT-BLUE-MD\",\n      \"imageUrl\": \"https://cdn.acme.com/products/tshirt-blue.jpg\",\n      \"quantity\": 2,\n      \"pricePerUnit\": 49.99,\n      \"discountAmountPerUnit\": 5,\n      \"total\": 89.98,\n      \"weight\": 0.3,\n      \"weightUnit\": \"KILOGRAMS\",\n      \"collectionIds\": [\n        \"col_apparel\",\n        \"col_summer\"\n      ],\n      \"categoryTypes\": [\n        \"clothing\"\n      ],\n      \"tags\": [\n        \"final-sale\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Missing required fields: externalId, orderNumber\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2d3569cf-3b0a-42d5-9639-576040d10d35",
+              "name": "The HMAC signature did not verify.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "webhooks",
+                    "external-order"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-LiquiDonate-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"order_99001\",\n  \"orderNumber\": \"#1001\",\n  \"confirmationNumber\": \"CONF-99001\",\n  \"orderDate\": \"2026-03-01T10:00:00Z\",\n  \"customerName\": \"Jane Smith\",\n  \"customerEmail\": \"jane@example.com\",\n  \"customerPhone\": \"+1-555-0100\",\n  \"shippingAddress1\": \"123 Main St\",\n  \"shippingAddress2\": \"Apt 4B\",\n  \"shippingCity\": \"Austin\",\n  \"shippingState\": \"TX\",\n  \"shippingZip\": \"78701\",\n  \"shippingCountry\": \"US\",\n  \"shippingPhone\": \"+1-555-0100\",\n  \"shippingLatitude\": 30.2672,\n  \"shippingLongitude\": -97.7431,\n  \"originalShippingFee\": 9.99,\n  \"shippingTaxAmount\": 0.82,\n  \"tags\": [\n    \"vip\",\n    \"spring-promo\"\n  ],\n  \"transactions\": [\n    {\n      \"id\": \"txn_abc123\",\n      \"kind\": \"sale\",\n      \"status\": \"success\",\n      \"amount\": 149.97,\n      \"currency\": \"USD\",\n      \"paymentMethod\": \"visa\",\n      \"createdAt\": \"2026-03-01T10:01:00Z\"\n    }\n  ],\n  \"lineItems\": [\n    {\n      \"externalLineItemId\": \"li_001\",\n      \"externalFulfillmentLineItemId\": \"fli_001\",\n      \"externalVariantId\": \"var_blue_md\",\n      \"title\": \"Classic T-Shirt\",\n      \"description\": \"100% cotton crew neck\",\n      \"sku\": \"TSHIRT-BLUE-MD\",\n      \"imageUrl\": \"https://cdn.acme.com/products/tshirt-blue.jpg\",\n      \"quantity\": 2,\n      \"pricePerUnit\": 49.99,\n      \"discountAmountPerUnit\": 5,\n      \"total\": 89.98,\n      \"weight\": 0.3,\n      \"weightUnit\": \"KILOGRAMS\",\n      \"collectionIds\": [\n        \"col_apparel\",\n        \"col_summer\"\n      ],\n      \"categoryTypes\": [\n        \"clothing\"\n      ],\n      \"tags\": [\n        \"final-sale\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid signature\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.liquidonate.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-LiquiDonate-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "03c7d731-4bbb-473d-8579-ab87bb7a0ba0",
+    "name": "MagicMatch by LiquiDonate Donate Orders API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.\n\n**Choosing an endpoint**\n\n- `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.\n- `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.\n- `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.\n- `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.\n- `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.\n- `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.\n\n**Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a \"Damaged\" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.\n\nThis description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.\n\nContact Support:\n Name: LiquiDonate\n Email: sales@liquidonate.com",
+      "type": "text/plain"
+    }
+  }
+}

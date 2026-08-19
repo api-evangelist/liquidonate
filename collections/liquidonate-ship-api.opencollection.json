@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MagicMatch by LiquiDonate Donate Ship API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-LiquiDonate-Key",
+      "value": "{{X-LiquiDonate-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Ship",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Match items to a nonprofit and buy the donation label",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/matchAndShip",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Matches the supplied items to a nearby nonprofit and purchases a shipping label in one call. Use for standard parcel-shippable items only - furniture, mattresses, drug paraphernalia, items over 50 kg and items returned as Damaged are excluded; route those to v1/donate. Pass `match_uuid` from v1/matchAndShip/estimate to lock in the previewed match and rate."
+        },
+        {
+          "info": {
+            "name": "Attach your own shipping labels to a match",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/match/ship",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing match with labels you purchased yourself. Required after v1/match when you generate your own postage, so the receiving nonprofit is notified and donation receipts can be issued."
+        },
+        {
+          "info": {
+            "name": "Buy a shipping label between two fixed addresses",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.liquidonate.com/v1/ship",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a shipment from a known source address to a known destination address. Performs no nonprofit matching and generates no donation receipts. Use for warehouse, fulfillment-center or store-originated returns where the destination is already fixed. Do not combine with v1/match - they are separate workflows."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
