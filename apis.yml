@@ -40,6 +40,19 @@ tags:
 - Reverse Logistics
 - Returns Management
 - Donations
+- Non-Profit
+- Retail
+- E-Commerce
+- Sustainability
+- Circular Economy
+- Shipping
+- Supply Chain
+- Excess Inventory
+- Company
+tags_raw:
+- Reverse Logistics
+- Returns Management
+- Donations
 - Nonprofits
 - Retail
 - Ecommerce
@@ -104,6 +117,8 @@ apis:
   humanURL: https://docs-magicmatch.liquidonate.com
   baseURL: https://api.liquidonate.com
   tags:
+  - Order
+  tags_raw:
   - Orders
   properties:
   - type: OpenAPI
