@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: MagicMatch by LiquiDonate Donate Retailer API
+  title: MagicMatch by LiquiDonate Retailer API
   version: 1.0.0
   summary: 'Donation-as-a-Service: match returned or excess retail items to nearby nonprofits and buy the donation shipping label.'
   description: 'MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.

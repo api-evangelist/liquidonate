@@ -1,46 +1,42 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: MagicMatch by LiquiDonate Donate Orders API
-  version: 1.0.0
-  summary: 'Donation-as-a-Service: match returned or excess retail items to nearby nonprofits and buy the donation shipping label.'
-  description: 'MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.
+  title: ReturnsDirect by LiquiDonate (Beta) Orders API
+  version: 1.0.0-beta
+  summary: 'Returns management integration: push order data to LiquiDonate and receive return and refund status webhooks.'
+  description: 'ReturnsDirect by LiquiDonate integrates LiquiDonate as a returns management solution for an ecommerce platform, retail brand or custom returns portal. The integration has two directions.
 
 
-    **Choosing an endpoint**
+    **Inbound (retailer to ReturnsDirect)** - you POST order data to `/webhooks/external-order` whenever an order is created or updated. LiquiDonate caches it so the customer-facing return portal can look up order details at return time without calling your API.
 
 
-    - `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.
-
-    - `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.
-
-    - `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.
-
-    - `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.
-
-    - `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.
-
-    - `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.
+    **Outbound (ReturnsDirect to retailer)** - LiquiDonate POSTs return and refund status events to the webhook URL you register, so you can update your own order management system. See the AsyncAPI definition in `asyncapi/` for the full event catalog.
 
 
-    **Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a "Damaged" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.
+    **Order lookup, zero-config option** - if you also want ReturnsDirect to fetch backlog orders on demand from your API, have your order search endpoint return the canonical ReturnsDirect camelCase shape documented here. When your API speaks that format no custom mapping code is needed; the built-in default mapper is used automatically. A custom mapper is only required when your API uses different field names or a different structure.
 
 
-    This description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.'
+    **Authentication** - both directions use HMAC-SHA256 with a shared secret LiquiDonate provisions for your shop. Sign the raw request body: `signature = HMAC-SHA256(secret, rawRequestBody)`, sent as lowercase hex in `X-Signature` alongside `X-Shop-Domain`. LiquiDonate sends the same headers outbound; verify with a timing-safe comparison.
+
+
+    This description is an API Evangelist reconstruction of the published Postman documentation at https://docs-returns.liquidonate.com - LiquiDonate does not publish an OpenAPI definition. This API is in Beta.'
   contact:
     name: LiquiDonate
-    url: https://docs-magicmatch.liquidonate.com
+    url: https://docs-returns.liquidonate.com
     email: sales@liquidonate.com
   termsOfService: https://www.liquidonate.com/terms-of-service
-  x-source: https://docs-magicmatch.liquidonate.com
-  x-source-collection: https://documenter.getpostman.com/view/21205794/2sA3QteBZu
+  x-source: https://docs-returns.liquidonate.com
+  x-source-collection: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+  x-lifecycle: beta
   x-generated-by: api-evangelist enrichment pipeline
   x-generated: '2026-07-19'
 servers:
-- url: https://api.liquidonate.com
-  description: 'Production. Verified live: unauthenticated requests return 401 {"error":"invalid api key or secret"}.'
+- url: https://returns.liquidonate.com
+  description: Production.
+- url: https://returns-sandbox.liquidonate.com
+  description: Sandbox, documented as the integration base URL.
 security:
-- liquidonateKey: []
-  liquidonateSecret: []
+- shopDomain: []
+  hmacSignature: []
 tags:
 - name: Orders
   description: Push order data into ReturnsDirect.
@@ -142,6 +138,65 @@ paths:
                 error: Invalid signature
 components:
   schemas:
+    Error:
+      type: object
+      description: ReturnsDirect error envelope.
+      properties:
+        error:
+          type: string
+    OrderLineItem:
+      type: object
+      properties:
+        externalLineItemId:
+          type: string
+          example: li_001
+        externalFulfillmentLineItemId:
+          type: string
+          example: fli_001
+        externalVariantId:
+          type: string
+          example: var_blue_md
+        title:
+          type: string
+          example: Classic T-Shirt
+        description:
+          type: string
+        sku:
+          type: string
+          example: TSHIRT-BLUE-MD
+        imageUrl:
+          type: string
+          format: uri
+        quantity:
+          type: integer
+          example: 2
+        pricePerUnit:
+          type: number
+          example: 49.99
+        discountAmountPerUnit:
+          type: number
+          example: 5.0
+        total:
+          type: number
+          example: 89.98
+        weight:
+          type: number
+          example: 0.3
+        weightUnit:
+          type: string
+          example: KILOGRAMS
+        collectionIds:
+          type: array
+          items:
+            type: string
+        categoryTypes:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
     Order:
       type: object
       description: An order in the canonical ReturnsDirect camelCase format. A retailer order API that already speaks this shape needs no custom mapper - the built-in default mapper is used automatically.
@@ -224,73 +279,14 @@ components:
       required:
       - externalId
       - orderNumber
-    OrderLineItem:
-      type: object
-      properties:
-        externalLineItemId:
-          type: string
-          example: li_001
-        externalFulfillmentLineItemId:
-          type: string
-          example: fli_001
-        externalVariantId:
-          type: string
-          example: var_blue_md
-        title:
-          type: string
-          example: Classic T-Shirt
-        description:
-          type: string
-        sku:
-          type: string
-          example: TSHIRT-BLUE-MD
-        imageUrl:
-          type: string
-          format: uri
-        quantity:
-          type: integer
-          example: 2
-        pricePerUnit:
-          type: number
-          example: 49.99
-        discountAmountPerUnit:
-          type: number
-          example: 5.0
-        total:
-          type: number
-          example: 89.98
-        weight:
-          type: number
-          example: 0.3
-        weightUnit:
-          type: string
-          example: KILOGRAMS
-        collectionIds:
-          type: array
-          items:
-            type: string
-        categoryTypes:
-          type: array
-          items:
-            type: string
-        tags:
-          type: array
-          items:
-            type: string
-    Error:
-      type: object
-      description: ReturnsDirect error envelope.
-      properties:
-        error:
-          type: string
   securitySchemes:
-    liquidonateKey:
+    shopDomain:
       type: apiKey
       in: header
-      name: X-LiquiDonate-Key
-      description: Retailer API key issued by v1/setupRetailer. Prefixed `ld_`.
-    liquidonateSecret:
+      name: X-Shop-Domain
+      description: Your shop identifier, e.g. acme.com. Must match the value LiquiDonate has on file.
+    hmacSignature:
       type: apiKey
       in: header
-      name: X-LiquiDonate-Secret
-      description: Retailer API secret issued by v1/setupRetailer. Prefixed `ld_sk_`.
+      name: X-Signature
+      description: HMAC-SHA256 of the raw request body using the shared secret LiquiDonate provisions for your shop, as lowercase hex.

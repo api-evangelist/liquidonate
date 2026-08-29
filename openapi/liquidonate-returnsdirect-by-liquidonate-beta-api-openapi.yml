@@ -1,0 +1,163 @@
+openapi: 3.2.0
+info:
+  title: ReturnsDirect By LiquiDonate (Beta) API
+  version: 1.0.0-beta
+  summary: 'Returns management integration: push order data to LiquiDonate and receive return and refund status webhooks.'
+  description: 'ReturnsDirect by LiquiDonate integrates LiquiDonate as a returns management solution for an ecommerce platform, retail brand or custom returns portal. The integration has two directions.
+
+
+    **Inbound (retailer to ReturnsDirect)** - you POST order data to `/webhooks/external-order` whenever an order is created or updated. LiquiDonate caches it so the customer-facing return portal can look up order details at return time without calling your API.
+
+
+    **Outbound (ReturnsDirect to retailer)** - LiquiDonate POSTs return and refund status events to the webhook URL you register, so you can update your own order management system. See the AsyncAPI definition in `asyncapi/` for the full event catalog.
+
+
+    **Order lookup, zero-config option** - if you also want ReturnsDirect to fetch backlog orders on demand from your API, have your order search endpoint return the canonical ReturnsDirect camelCase shape documented here. When your API speaks that format no custom mapping code is needed; the built-in default mapper is used automatically. A custom mapper is only required when your API uses different field names or a different structure.
+
+
+    **Authentication** - both directions use HMAC-SHA256 with a shared secret LiquiDonate provisions for your shop. Sign the raw request body: `signature = HMAC-SHA256(secret, rawRequestBody)`, sent as lowercase hex in `X-Signature` alongside `X-Shop-Domain`. LiquiDonate sends the same headers outbound; verify with a timing-safe comparison.
+
+
+    This description is an API Evangelist reconstruction of the published Postman documentation at https://docs-returns.liquidonate.com - LiquiDonate does not publish an OpenAPI definition. This API is in Beta.'
+  contact:
+    name: LiquiDonate
+    url: https://docs-returns.liquidonate.com
+    email: sales@liquidonate.com
+  termsOfService: https://www.liquidonate.com/terms-of-service
+  x-source: https://docs-returns.liquidonate.com
+  x-source-collection: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+  x-lifecycle: beta
+  x-generated-by: api-evangelist enrichment pipeline
+  x-generated: '2026-07-19'
+servers:
+- url: https://returns.liquidonate.com
+  description: Production.
+- url: https://returns-sandbox.liquidonate.com
+  description: Sandbox, documented as the integration base URL.
+security:
+- shopDomain: []
+  hmacSignature: []
+tags:
+- name: ReturnsDirect By LiquiDonate (Beta)
+paths: {}
+webhooks:
+  returnStatusChanged:
+    post:
+      operationId: onReturnStatusChanged
+      summary: Return status event
+      description: Sent to your registered webhook URL when a return moves to pending, pending_approval, approved, rejected or cancelled. Signed with the same HMAC-SHA256 scheme; verify with a timing-safe comparison.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReturnWebhookEvent'
+            example:
+              event: return.approved
+              shop: acme.com
+              parcelId: 101
+              rmaId: '1001'
+              externalOrderId: order_99001
+              orderNumber: '#1001'
+              status: approved
+              refundStatus: pending
+              refundAmount: null
+              refundMethod: cash
+              updatedAt: '2026-03-07T09:05:00.000Z'
+      responses:
+        '200':
+          description: Acknowledged.
+      tags:
+      - ReturnsDirect By LiquiDonate (Beta)
+  refundStatusChanged:
+    post:
+      operationId: onRefundStatusChanged
+      summary: Refund status event
+      description: Sent to your registered webhook URL when a refund completes or is flagged for review.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReturnWebhookEvent'
+            example:
+              event: refund.completed
+              shop: acme.com
+              parcelId: 101
+              rmaId: '1001'
+              externalOrderId: order_99001
+              orderNumber: '#1001'
+              status: approved
+              refundStatus: completed
+              refundAmount: 89.98
+              refundMethod: cash
+              updatedAt: '2026-03-07T10:30:00.000Z'
+      responses:
+        '200':
+          description: Acknowledged.
+      tags:
+      - ReturnsDirect By LiquiDonate (Beta)
+components:
+  schemas:
+    ReturnWebhookEvent:
+      type: object
+      description: Outbound return/refund status event sent by ReturnsDirect to the retailer webhook URL.
+      properties:
+        event:
+          type: string
+          enum:
+          - return.pending
+          - return.pending_approval
+          - return.approved
+          - return.rejected
+          - return.cancelled
+          - refund.completed
+          - refund.flagged
+        shop:
+          type: string
+          description: Your shop identifier.
+          example: acme.com
+        parcelId:
+          type: integer
+          example: 101
+        rmaId:
+          type: string
+          example: '1001'
+        externalOrderId:
+          type: string
+          example: order_99001
+        orderNumber:
+          type: string
+          example: '#1001'
+        status:
+          type: string
+          enum:
+          - pending
+          - pending_approval
+          - approved
+          - rejected
+          - cancelled
+        refundStatus:
+          type: string
+          enum:
+          - pending
+          - completed
+          - flagged
+        refundAmount:
+          type: number
+          nullable: true
+        refundMethod:
+          type: string
+          example: cash
+        updatedAt:
+          type: string
+          format: date-time
+  securitySchemes:
+    shopDomain:
+      type: apiKey
+      in: header
+      name: X-Shop-Domain
+      description: Your shop identifier, e.g. acme.com. Must match the value LiquiDonate has on file.
+    hmacSignature:
+      type: apiKey
+      in: header
+      name: X-Signature
+      description: HMAC-SHA256 of the raw request body using the shared secret LiquiDonate provisions for your shop, as lowercase hex.
