@@ -13,6 +13,18 @@ description: >-
   order data plus HMAC-signed return and refund webhooks. LiquiDonate integrates with Shopify, Loop,
   EasyPost, FedEx, Bungii, SendGrid and Rise AI, and has been recognized on TIME Best Inventions 2025 and
   Fast Company World Changing Ideas.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
@@ -185,6 +197,18 @@ apis:
     url: asyncapi/liquidonate-returnsdirect-asyncapi.yml
   - type: Postman
     url: https://documenter.getpostman.com/view/28612413/2sBXierZMP
+- aid: liquidonate:liquidonate-returnsdirect-by-liquidonate-beta-api
+  name: LiquiDonate ReturnsDirect By LiquiDonate (Beta) API
+  description: >-
+    The ReturnsDirect By LiquiDonate (Beta) API from LiquiDonate — 0 operation(s) for returnsdirect by
+    liquidonate (beta).
+  humanURL: https://docs-magicmatch.liquidonate.com
+  baseURL: https://api.liquidonate.com
+  tags:
+  - ReturnsDirect By LiquiDonate (Beta)
+  properties:
+  - type: OpenAPI
+    url: openapi/liquidonate-returnsdirect-by-liquidonate-beta-api-openapi.yml
 common:
 - type: MCPServer
   url: mcp/liquidonate-mcp.yml
