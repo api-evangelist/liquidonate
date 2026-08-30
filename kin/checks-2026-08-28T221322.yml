@@ -2,15 +2,15 @@
 kin_checks:
   slug: liquidonate
   schema_version: 0.15.1
-  scored_at: '2026-08-27'
-  run_ts: 2026-08-27T140727
+  scored_at: '2026-08-28'
+  run_ts: 2026-08-28T221322
   note: Actionable checks only (missed + partial). earned/na are every other check
     in rubric/scoring-0.15.1.yml; counts below let you verify that.
   counts:
     total: 130
-    earned: 53
-    partial: 6
-    missed: 47
+    earned: 46
+    partial: 14
+    missed: 46
     na: 24
   checks:
   - id: well_known_published
@@ -21,13 +21,10 @@ kin_checks:
     status: missed
   - id: openapi_3_2
     status: missed
-    detail: 0 of 5 openapi documents pass
+    detail: 0 of 6 openapi documents pass
   - id: openapi_3_0
     status: missed
-    detail: 0 of 5 openapi documents pass
-  - id: webhooks_or_callbacks
-    status: missed
-    detail: 0 of 5 openapi documents pass
+    detail: 0 of 6 openapi documents pass
   - id: json_schema_present
     status: missed
   - id: json_schema_per_resource
@@ -110,10 +107,41 @@ kin_checks:
     status: missed
   - id: agentic_commerce
     status: missed
+  - id: operations_summary_coverage
+    status: partial
+    earned: 5.0
+    detail: 5 of 6 openapi documents pass
+  - id: operations_description_coverage
+    status: partial
+    earned: 5.0
+    detail: 5 of 6 openapi documents pass
+  - id: operations_tagged
+    status: partial
+    earned: 3.33
+    detail: 5 of 6 openapi documents pass
+  - id: operations_operation_ids
+    status: partial
+    earned: 3.33
+    detail: 5 of 6 openapi documents pass
+  - id: response_coverage
+    status: partial
+    earned: 4.17
+    detail: 5 of 6 openapi documents pass
+  - id: error_responses_documented
+    status: partial
+    earned: 3.33
+    detail: 5 of 6 openapi documents pass
+  - id: examples_present
+    status: partial
+    earned: 3.33
   - id: components_reuse
     status: partial
-    earned: 1.8
-    detail: 3 of 5 openapi documents pass
+    earned: 1.5
+    detail: 3 of 6 openapi documents pass
+  - id: webhooks_or_callbacks
+    status: partial
+    earned: 0.33
+    detail: 1 of 6 openapi documents pass
   - id: conformance_declared
     status: partial
     earned: 1.5
