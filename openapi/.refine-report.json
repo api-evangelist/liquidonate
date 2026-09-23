@@ -21,13 +21,15 @@
     "liquidonate-returnsdirect-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "liquidonate-returnsdirect-openapi.yml: tagged webhooks POST returnStatusChanged -> ReturnsDirect By LiquiDonate (Beta)",
     "liquidonate-returnsdirect-openapi.yml: tagged webhooks POST refundStatusChanged -> ReturnsDirect By LiquiDonate (Beta)",
-    "liquidonate-returnsdirect-openapi.yml: declared missing tag: ReturnsDirect By LiquiDonate (Beta)"
+    "liquidonate-returnsdirect-openapi.yml: declared missing tag: ReturnsDirect By LiquiDonate (Beta)",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "liquidonate-donate-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "liquidonate-match-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "liquidonate-orders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "liquidonate-retailer-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "liquidonate-returnsdirect-by-liquidonate-beta-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "liquidonate-ship-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

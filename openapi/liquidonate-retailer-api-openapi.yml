@@ -3,29 +3,7 @@ info:
   title: MagicMatch by LiquiDonate Retailer API
   version: 1.0.0
   summary: 'Donation-as-a-Service: match returned or excess retail items to nearby nonprofits and buy the donation shipping label.'
-  description: 'MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label. The matching engine picks a nearby nonprofit that accepts the item categories supplied, and LiquiDonate purchases postage so the item ships directly from the customer or warehouse to that nonprofit, generating a donation receipt instead of a landfill-bound return.
-
-
-    **Choosing an endpoint**
-
-
-    - `v1/matchAndShip/estimate` - preview the nonprofit match and shipping rate without creating a shipment.
-
-    - `v1/matchAndShip` - match and buy the label in one call. Pass the `match_uuid` from `/estimate` to keep the same match and rate.
-
-    - `v1/match` - match only, no rate and no shipment. Follow with `v1/match/ship` if you buy your own label.
-
-    - `v1/match/ship` - attach your own label(s) to an existing match so the nonprofit is notified and receipts are generated.
-
-    - `v1/ship` - buy a label between two fixed addresses. No nonprofit matching and no donation receipts.
-
-    - `v1/donate` - bulky, oversized, multi-package or pickup-scheduled donations that fall outside standard parcel shipping.
-
-
-    **Exclusions for matching endpoints** (per the published docs): furniture, mattresses and drug paraphernalia are excluded; items over 50 kg are excluded; items with a "Damaged" return reason are excluded. Use `v1/donate` for furniture, mattresses and heavy items.
-
-
-    This description is an API Evangelist reconstruction of the published Postman documentation at https://docs-magicmatch.liquidonate.com - LiquiDonate does not publish an OpenAPI definition.'
+  description: MagicMatch by LiquiDonate lets retailers, returns platforms, 3PLs, warehouse systems and reverse-logistics providers send parcel and item details to LiquiDonate and receive a nonprofit match plus a donation shipping label.
   contact:
     name: LiquiDonate
     url: https://docs-magicmatch.liquidonate.com
