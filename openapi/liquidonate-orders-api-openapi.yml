@@ -123,12 +123,6 @@ paths:
                 error: Invalid signature
 components:
   schemas:
-    Error:
-      type: object
-      description: ReturnsDirect error envelope.
-      properties:
-        error:
-          type: string
     Order:
       type: object
       description: An order in the canonical ReturnsDirect camelCase format. A retailer order API that already speaks this shape needs no custom mapper - the built-in default mapper is used automatically.
@@ -211,6 +205,12 @@ components:
       required:
       - externalId
       - orderNumber
+    Error:
+      type: object
+      description: ReturnsDirect error envelope.
+      properties:
+        error:
+          type: string
     OrderLineItem:
       type: object
       properties:

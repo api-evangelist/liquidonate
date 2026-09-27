@@ -294,22 +294,56 @@ paths:
                 error: error buying label
 components:
   schemas:
-    MatchItem:
+    Label:
       type: object
+      description: A purchased shipping label for the donation parcel.
+      properties:
+        trackingNumber:
+          type: string
+          example: '9405500110368049165575'
+        carrier:
+          type: string
+          example: USPS
+        labelURL:
+          type: string
+          format: uri
+          description: Downloadable postage label image.
+        rate:
+          $ref: '#/components/schemas/Rate'
+    Match:
+      type: object
+      description: A nonprofit match, optionally with a purchased shipping label.
       properties:
         uuid:
           type: string
           format: uuid
-        title:
+          description: Match UUID. Pass to v1/matchAndShip or v1/match/ship to keep the same match and rate.
+        rma_id:
           type: string
-        sku:
+          nullable: true
+        nonprofit:
+          $ref: '#/components/schemas/Nonprofit'
+        distanceMiles:
           type: string
-        quantity:
+          description: Distance to the matched nonprofit, in miles.
+          example: '7.38'
+        rate:
           type: string
-          description: Quantity, returned as a string.
-        weight:
-          type: number
-          format: double
+          description: Shipping rate as a decimal string.
+          example: '36.94'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchItem'
+        label:
+          $ref: '#/components/schemas/Label'
+        labels:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/Label'
+        sourceLocation:
+          $ref: '#/components/schemas/Location'
     RequestItem:
       type: object
       description: An item being donated or returned.
@@ -346,6 +380,171 @@ components:
       required:
       - title
       - quantity
+    MatchResponse:
+      type: object
+      properties:
+        match:
+          $ref: '#/components/schemas/Match'
+    Address:
+      type: object
+      description: A US postal address. Latitude/longitude are optional; LiquiDonate geocodes when omitted.
+      properties:
+        streetAddress1:
+          type: string
+          example: 149 New Montgomery St.
+        streetAddress2:
+          type: string
+          nullable: true
+          example: Floor 4
+        city:
+          type: string
+          example: San Francisco
+        state:
+          type: string
+          description: Two-letter state code.
+          example: CA
+        zip:
+          type: string
+          example: '94105'
+        countryCode:
+          type: string
+          example: US
+        latitude:
+          type: number
+          format: double
+          nullable: true
+          example: 38.77497
+        longitude:
+          type: number
+          format: double
+          nullable: true
+          example: -122.431297
+      required:
+      - streetAddress1
+      - city
+      - state
+      - zip
+      - countryCode
+    Location:
+      type: object
+      properties:
+        name:
+          type: string
+        contactNumber:
+          type: string
+        contactEmail:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+      required:
+      - address
+    MatchItem:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        title:
+          type: string
+        sku:
+          type: string
+        quantity:
+          type: string
+          description: Quantity, returned as a string.
+        weight:
+          type: number
+          format: double
+    MatchRequest:
+      type: object
+      properties:
+        donor:
+          $ref: '#/components/schemas/Donor'
+        location:
+          $ref: '#/components/schemas/Location'
+        parcel:
+          type: object
+          properties:
+            weight:
+              type: number
+              format: double
+              description: Total parcel weight in pounds.
+              example: 2.7
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestItem'
+        match_uuid:
+          type: string
+          format: uuid
+          description: Optional. UUID returned by v1/matchAndShip/estimate. Recommended so the same match and rate are applied.
+        order_id:
+          type: string
+          description: Optional. Your identifier for the associated order.
+        rma_id:
+          type: string
+          description: Optional. Return Merchandise Authorization ID.
+        retailer_uuid:
+          type: string
+          format: uuid
+          description: Optional. Child retailer UUID. The child retailer must be linked to the retailer that owns the API key.
+      required:
+      - donor
+      - location
+      - items
+    Donor:
+      type: object
+      description: The person donating or returning the items.
+      properties:
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example: john.doe@liquidonate.com
+        contactNumber:
+          type: string
+          example: '123456789'
+      required:
+      - firstName
+      - lastName
+      - email
+    Error:
+      type: object
+      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          example: retrieve_rate_error
+        error:
+          type: string
+          description: Human-readable error message.
+          example: error buying label
+        cause:
+          type: string
+          description: Underlying cause, when available.
+    Rate:
+      type: object
+      properties:
+        id:
+          type: string
+        shipment_detail:
+          type: object
+          nullable: true
+        value:
+          type: string
+          description: Shipping rate as a decimal string.
+          example: '38.33'
+        currencyCode:
+          type: string
+          example: USD
     CategoryType:
       type: string
       description: LiquiDonate item category. Drives which nonprofits are eligible for a match.
@@ -521,61 +720,6 @@ components:
       - feminine_outerwear
       - party_supplies
       - exclusions
-    Match:
-      type: object
-      description: A nonprofit match, optionally with a purchased shipping label.
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          description: Match UUID. Pass to v1/matchAndShip or v1/match/ship to keep the same match and rate.
-        rma_id:
-          type: string
-          nullable: true
-        nonprofit:
-          $ref: '#/components/schemas/Nonprofit'
-        distanceMiles:
-          type: string
-          description: Distance to the matched nonprofit, in miles.
-          example: '7.38'
-        rate:
-          type: string
-          description: Shipping rate as a decimal string.
-          example: '36.94'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/MatchItem'
-        label:
-          $ref: '#/components/schemas/Label'
-        labels:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/Label'
-        sourceLocation:
-          $ref: '#/components/schemas/Location'
-    Donor:
-      type: object
-      description: The person donating or returning the items.
-      properties:
-        firstName:
-          type: string
-          example: John
-        lastName:
-          type: string
-          example: Doe
-        email:
-          type: string
-          format: email
-          example: john.doe@liquidonate.com
-        contactNumber:
-          type: string
-          example: '123456789'
-      required:
-      - firstName
-      - lastName
-      - email
     Nonprofit:
       type: object
       description: The nonprofit LiquiDonate matched the items to.
@@ -588,150 +732,6 @@ components:
           example: https://woodstockareacounselonaging.org
         address:
           $ref: '#/components/schemas/Address'
-    MatchResponse:
-      type: object
-      properties:
-        match:
-          $ref: '#/components/schemas/Match'
-    Location:
-      type: object
-      properties:
-        name:
-          type: string
-        contactNumber:
-          type: string
-        contactEmail:
-          type: string
-        notes:
-          type: string
-          nullable: true
-        address:
-          $ref: '#/components/schemas/Address'
-      required:
-      - address
-    MatchRequest:
-      type: object
-      properties:
-        donor:
-          $ref: '#/components/schemas/Donor'
-        location:
-          $ref: '#/components/schemas/Location'
-        parcel:
-          type: object
-          properties:
-            weight:
-              type: number
-              format: double
-              description: Total parcel weight in pounds.
-              example: 2.7
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/RequestItem'
-        match_uuid:
-          type: string
-          format: uuid
-          description: Optional. UUID returned by v1/matchAndShip/estimate. Recommended so the same match and rate are applied.
-        order_id:
-          type: string
-          description: Optional. Your identifier for the associated order.
-        rma_id:
-          type: string
-          description: Optional. Return Merchandise Authorization ID.
-        retailer_uuid:
-          type: string
-          format: uuid
-          description: Optional. Child retailer UUID. The child retailer must be linked to the retailer that owns the API key.
-      required:
-      - donor
-      - location
-      - items
-    Address:
-      type: object
-      description: A US postal address. Latitude/longitude are optional; LiquiDonate geocodes when omitted.
-      properties:
-        streetAddress1:
-          type: string
-          example: 149 New Montgomery St.
-        streetAddress2:
-          type: string
-          nullable: true
-          example: Floor 4
-        city:
-          type: string
-          example: San Francisco
-        state:
-          type: string
-          description: Two-letter state code.
-          example: CA
-        zip:
-          type: string
-          example: '94105'
-        countryCode:
-          type: string
-          example: US
-        latitude:
-          type: number
-          format: double
-          nullable: true
-          example: 38.77497
-        longitude:
-          type: number
-          format: double
-          nullable: true
-          example: -122.431297
-      required:
-      - streetAddress1
-      - city
-      - state
-      - zip
-      - countryCode
-    Rate:
-      type: object
-      properties:
-        id:
-          type: string
-        shipment_detail:
-          type: object
-          nullable: true
-        value:
-          type: string
-          description: Shipping rate as a decimal string.
-          example: '38.33'
-        currencyCode:
-          type: string
-          example: USD
-    Error:
-      type: object
-      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code.
-          example: retrieve_rate_error
-        error:
-          type: string
-          description: Human-readable error message.
-          example: error buying label
-        cause:
-          type: string
-          description: Underlying cause, when available.
-    Label:
-      type: object
-      description: A purchased shipping label for the donation parcel.
-      properties:
-        trackingNumber:
-          type: string
-          example: '9405500110368049165575'
-        carrier:
-          type: string
-          example: USPS
-        labelURL:
-          type: string
-          format: uri
-          description: Downloadable postage label image.
-        rate:
-          $ref: '#/components/schemas/Rate'
   securitySchemes:
     liquidonateKey:
       type: apiKey
