@@ -310,123 +310,6 @@ paths:
                 error: invalid api key or secret
 components:
   schemas:
-    Label:
-      type: object
-      description: A purchased shipping label for the donation parcel.
-      properties:
-        trackingNumber:
-          type: string
-          example: '9405500110368049165575'
-        carrier:
-          type: string
-          example: USPS
-        labelURL:
-          type: string
-          format: uri
-          description: Downloadable postage label image.
-        rate:
-          $ref: '#/components/schemas/Rate'
-    Match:
-      type: object
-      description: A nonprofit match, optionally with a purchased shipping label.
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          description: Match UUID. Pass to v1/matchAndShip or v1/match/ship to keep the same match and rate.
-        rma_id:
-          type: string
-          nullable: true
-        nonprofit:
-          $ref: '#/components/schemas/Nonprofit'
-        distanceMiles:
-          type: string
-          description: Distance to the matched nonprofit, in miles.
-          example: '7.38'
-        rate:
-          type: string
-          description: Shipping rate as a decimal string.
-          example: '36.94'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/MatchItem'
-        label:
-          $ref: '#/components/schemas/Label'
-        labels:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/Label'
-        sourceLocation:
-          $ref: '#/components/schemas/Location'
-    RequestItem:
-      type: object
-      description: An item being donated or returned.
-      properties:
-        title:
-          type: string
-          example: Original Bag - Ivory
-        sku:
-          type: string
-          example: ABV001
-        description:
-          type: string
-        quantity:
-          type: integer
-          example: 1
-        price:
-          type: string
-          example: '100.00'
-        categoryTypes:
-          type: array
-          description: One or more LiquiDonate item categories. Drives nonprofit matching.
-          items:
-            $ref: '#/components/schemas/CategoryType'
-        conditionTagTypes:
-          type: array
-          items:
-            type: string
-            example: new
-          description: Condition tags for the item, e.g. "new".
-        weightLbs:
-          type: number
-          format: double
-          example: 2.5
-      required:
-      - title
-      - quantity
-    Error:
-      type: object
-      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code.
-          example: retrieve_rate_error
-        error:
-          type: string
-          description: Human-readable error message.
-          example: error buying label
-        cause:
-          type: string
-          description: Underlying cause, when available.
-    MatchItem:
-      type: object
-      properties:
-        uuid:
-          type: string
-          format: uuid
-        title:
-          type: string
-        sku:
-          type: string
-        quantity:
-          type: string
-          description: Quantity, returned as a string.
-        weight:
-          type: number
-          format: double
     Address:
       type: object
       description: A US postal address. Latitude/longitude are optional; LiquiDonate geocodes when omitted.
@@ -467,11 +350,6 @@ components:
       - state
       - zip
       - countryCode
-    MatchResponse:
-      type: object
-      properties:
-        match:
-          $ref: '#/components/schemas/Match'
     Location:
       type: object
       properties:
@@ -488,6 +366,21 @@ components:
           $ref: '#/components/schemas/Address'
       required:
       - address
+    Error:
+      type: object
+      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          example: retrieve_rate_error
+        error:
+          type: string
+          description: Human-readable error message.
+          example: error buying label
+        cause:
+          type: string
+          description: Underlying cause, when available.
     MatchRequest:
       type: object
       properties:
@@ -546,33 +439,6 @@ components:
       - firstName
       - lastName
       - email
-    Nonprofit:
-      type: object
-      description: The nonprofit LiquiDonate matched the items to.
-      properties:
-        organizationName:
-          type: string
-          example: Woodstock Area Counsel On Aging
-        website:
-          type: string
-          example: https://woodstockareacounselonaging.org
-        address:
-          $ref: '#/components/schemas/Address'
-    Rate:
-      type: object
-      properties:
-        id:
-          type: string
-        shipment_detail:
-          type: object
-          nullable: true
-        value:
-          type: string
-          description: Shipping rate as a decimal string.
-          example: '38.33'
-        currencyCode:
-          type: string
-          example: USD
     CategoryType:
       type: string
       description: LiquiDonate item category. Drives which nonprofits are eligible for a match.
@@ -748,6 +614,140 @@ components:
       - feminine_outerwear
       - party_supplies
       - exclusions
+    Nonprofit:
+      type: object
+      description: The nonprofit LiquiDonate matched the items to.
+      properties:
+        organizationName:
+          type: string
+          example: Woodstock Area Counsel On Aging
+        website:
+          type: string
+          example: https://woodstockareacounselonaging.org
+        address:
+          $ref: '#/components/schemas/Address'
+    MatchItem:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        title:
+          type: string
+        sku:
+          type: string
+        quantity:
+          type: string
+          description: Quantity, returned as a string.
+        weight:
+          type: number
+          format: double
+    Match:
+      type: object
+      description: A nonprofit match, optionally with a purchased shipping label.
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: Match UUID. Pass to v1/matchAndShip or v1/match/ship to keep the same match and rate.
+        rma_id:
+          type: string
+          nullable: true
+        nonprofit:
+          $ref: '#/components/schemas/Nonprofit'
+        distanceMiles:
+          type: string
+          description: Distance to the matched nonprofit, in miles.
+          example: '7.38'
+        rate:
+          type: string
+          description: Shipping rate as a decimal string.
+          example: '36.94'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchItem'
+        label:
+          $ref: '#/components/schemas/Label'
+        labels:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/Label'
+        sourceLocation:
+          $ref: '#/components/schemas/Location'
+    Rate:
+      type: object
+      properties:
+        id:
+          type: string
+        shipment_detail:
+          type: object
+          nullable: true
+        value:
+          type: string
+          description: Shipping rate as a decimal string.
+          example: '38.33'
+        currencyCode:
+          type: string
+          example: USD
+    RequestItem:
+      type: object
+      description: An item being donated or returned.
+      properties:
+        title:
+          type: string
+          example: Original Bag - Ivory
+        sku:
+          type: string
+          example: ABV001
+        description:
+          type: string
+        quantity:
+          type: integer
+          example: 1
+        price:
+          type: string
+          example: '100.00'
+        categoryTypes:
+          type: array
+          description: One or more LiquiDonate item categories. Drives nonprofit matching.
+          items:
+            $ref: '#/components/schemas/CategoryType'
+        conditionTagTypes:
+          type: array
+          items:
+            type: string
+            example: new
+          description: Condition tags for the item, e.g. "new".
+        weightLbs:
+          type: number
+          format: double
+          example: 2.5
+      required:
+      - title
+      - quantity
+    Label:
+      type: object
+      description: A purchased shipping label for the donation parcel.
+      properties:
+        trackingNumber:
+          type: string
+          example: '9405500110368049165575'
+        carrier:
+          type: string
+          example: USPS
+        labelURL:
+          type: string
+          format: uri
+          description: Downloadable postage label image.
+        rate:
+          $ref: '#/components/schemas/Rate'
+    MatchResponse:
+      type: object
+      properties:
+        match:
+          $ref: '#/components/schemas/Match'
   securitySchemes:
     liquidonateKey:
       type: apiKey

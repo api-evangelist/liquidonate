@@ -256,6 +256,21 @@ components:
       - state
       - zip
       - countryCode
+    Error:
+      type: object
+      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          example: retrieve_rate_error
+        error:
+          type: string
+          description: Human-readable error message.
+          example: error buying label
+        cause:
+          type: string
+          description: Underlying cause, when available.
     Location:
       type: object
       properties:
@@ -272,21 +287,6 @@ components:
           $ref: '#/components/schemas/Address'
       required:
       - address
-    Error:
-      type: object
-      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code.
-          example: retrieve_rate_error
-        error:
-          type: string
-          description: Human-readable error message.
-          example: error buying label
-        cause:
-          type: string
-          description: Underlying cause, when available.
     CategoryType:
       type: string
       description: LiquiDonate item category. Drives which nonprofits are eligible for a match.
