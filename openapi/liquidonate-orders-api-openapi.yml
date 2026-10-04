@@ -123,6 +123,65 @@ paths:
                 error: Invalid signature
 components:
   schemas:
+    OrderLineItem:
+      type: object
+      properties:
+        externalLineItemId:
+          type: string
+          example: li_001
+        externalFulfillmentLineItemId:
+          type: string
+          example: fli_001
+        externalVariantId:
+          type: string
+          example: var_blue_md
+        title:
+          type: string
+          example: Classic T-Shirt
+        description:
+          type: string
+        sku:
+          type: string
+          example: TSHIRT-BLUE-MD
+        imageUrl:
+          type: string
+          format: uri
+        quantity:
+          type: integer
+          example: 2
+        pricePerUnit:
+          type: number
+          example: 49.99
+        discountAmountPerUnit:
+          type: number
+          example: 5.0
+        total:
+          type: number
+          example: 89.98
+        weight:
+          type: number
+          example: 0.3
+        weightUnit:
+          type: string
+          example: KILOGRAMS
+        collectionIds:
+          type: array
+          items:
+            type: string
+        categoryTypes:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+    Error:
+      type: object
+      description: ReturnsDirect error envelope.
+      properties:
+        error:
+          type: string
     Order:
       type: object
       description: An order in the canonical ReturnsDirect camelCase format. A retailer order API that already speaks this shape needs no custom mapper - the built-in default mapper is used automatically.
@@ -205,65 +264,6 @@ components:
       required:
       - externalId
       - orderNumber
-    Error:
-      type: object
-      description: ReturnsDirect error envelope.
-      properties:
-        error:
-          type: string
-    OrderLineItem:
-      type: object
-      properties:
-        externalLineItemId:
-          type: string
-          example: li_001
-        externalFulfillmentLineItemId:
-          type: string
-          example: fli_001
-        externalVariantId:
-          type: string
-          example: var_blue_md
-        title:
-          type: string
-          example: Classic T-Shirt
-        description:
-          type: string
-        sku:
-          type: string
-          example: TSHIRT-BLUE-MD
-        imageUrl:
-          type: string
-          format: uri
-        quantity:
-          type: integer
-          example: 2
-        pricePerUnit:
-          type: number
-          example: 49.99
-        discountAmountPerUnit:
-          type: number
-          example: 5.0
-        total:
-          type: number
-          example: 89.98
-        weight:
-          type: number
-          example: 0.3
-        weightUnit:
-          type: string
-          example: KILOGRAMS
-        collectionIds:
-          type: array
-          items:
-            type: string
-        categoryTypes:
-          type: array
-          items:
-            type: string
-        tags:
-          type: array
-          items:
-            type: string
   securitySchemes:
     shopDomain:
       type: apiKey
