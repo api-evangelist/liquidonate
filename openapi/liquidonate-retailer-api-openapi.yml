@@ -177,21 +177,6 @@ paths:
                 error: invalid api key or secret
 components:
   schemas:
-    Error:
-      type: object
-      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code.
-          example: retrieve_rate_error
-        error:
-          type: string
-          description: Human-readable error message.
-          example: error buying label
-        cause:
-          type: string
-          description: Underlying cause, when available.
     Address:
       type: object
       description: A US postal address. Latitude/longitude are optional; LiquiDonate geocodes when omitted.
@@ -232,6 +217,21 @@ components:
       - state
       - zip
       - countryCode
+    Error:
+      type: object
+      description: LiquiDonate error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          example: retrieve_rate_error
+        error:
+          type: string
+          description: Human-readable error message.
+          example: error buying label
+        cause:
+          type: string
+          description: Underlying cause, when available.
   securitySchemes:
     liquidonateKey:
       type: apiKey

@@ -207,46 +207,31 @@ paths:
                 error: invalid api key or secret
 components:
   schemas:
-    Address:
+    Money:
       type: object
-      description: A US postal address. Latitude/longitude are optional; LiquiDonate geocodes when omitted.
       properties:
-        streetAddress1:
-          type: string
-          example: 149 New Montgomery St.
-        streetAddress2:
-          type: string
-          nullable: true
-          example: Floor 4
-        city:
-          type: string
-          example: San Francisco
-        state:
-          type: string
-          description: Two-letter state code.
-          example: CA
-        zip:
-          type: string
-          example: '94105'
-        countryCode:
-          type: string
-          example: US
-        latitude:
+        value:
           type: number
-          format: double
+          example: 100
+        currencyCode:
+          type: string
+          example: USD
+    Location:
+      type: object
+      properties:
+        name:
+          type: string
+        contactNumber:
+          type: string
+        contactEmail:
+          type: string
+        notes:
+          type: string
           nullable: true
-          example: 38.77497
-        longitude:
-          type: number
-          format: double
-          nullable: true
-          example: -122.431297
+        address:
+          $ref: '#/components/schemas/Address'
       required:
-      - streetAddress1
-      - city
-      - state
-      - zip
-      - countryCode
+      - address
     CategoryType:
       type: string
       description: LiquiDonate item category. Drives which nonprofits are eligible for a match.
@@ -422,31 +407,46 @@ components:
       - feminine_outerwear
       - party_supplies
       - exclusions
-    Money:
+    Address:
       type: object
+      description: A US postal address. Latitude/longitude are optional; LiquiDonate geocodes when omitted.
       properties:
-        value:
-          type: number
-          example: 100
-        currencyCode:
+        streetAddress1:
           type: string
-          example: USD
-    Location:
-      type: object
-      properties:
-        name:
-          type: string
-        contactNumber:
-          type: string
-        contactEmail:
-          type: string
-        notes:
+          example: 149 New Montgomery St.
+        streetAddress2:
           type: string
           nullable: true
-        address:
-          $ref: '#/components/schemas/Address'
+          example: Floor 4
+        city:
+          type: string
+          example: San Francisco
+        state:
+          type: string
+          description: Two-letter state code.
+          example: CA
+        zip:
+          type: string
+          example: '94105'
+        countryCode:
+          type: string
+          example: US
+        latitude:
+          type: number
+          format: double
+          nullable: true
+          example: 38.77497
+        longitude:
+          type: number
+          format: double
+          nullable: true
+          example: -122.431297
       required:
-      - address
+      - streetAddress1
+      - city
+      - state
+      - zip
+      - countryCode
     Error:
       type: object
       description: LiquiDonate error envelope. Not RFC 9457 problem+json.
