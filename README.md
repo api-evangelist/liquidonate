@@ -64,34 +64,142 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-LiquiDonate is a San Francisco based reverse-logistics and donation-disposition platform that turns retail returns, excess inventory and unsellable goods into local nonprofit donations instead of landfill or liquidation. Its matching engine pairs items with nearby nonprofits that want them, buys the shipping label, routes the parcel and generates the donation receipt.
+LiquiDonate is a San Francisco based reverse-logistics and donation-disposition platform that turns retail returns, excess inventory and unsellable goods into local nonprofit donations instead of landfill or liquidation. Its matching engine pairs items with nearby nonprofits that want them, buys the shipping label, routes the parcel and generates the donation receipt, so retailers recover tax value and meet extended-producer-responsibility and sustainability obligations. The company sells three product lines - ReturnsDirect (customer-direct returns), WarehouseDirect (warehouse and 3PL excess inventory) and BoxDrop (donation boxes) - and exposes two public developer APIs: MagicMatch, a donation-as-a-service API that accepts parcel and item details and returns a nonprofit match plus a donation shipping label, and ReturnsDirect, a beta returns-management integration for non-Shopify ecommerce platforms built on pushed order data plus HMAC-signed return and refund webhooks. LiquiDonate integrates with Shopify, Loop, EasyPost, FedEx, Bungii, SendGrid and Rise AI, and has been recognized on TIME Best Inventions 2025 and Fast Company World Changing Ideas.
 
-Backed by: uncork-capital
+**Areas:** Reverse Logistics · Returns Management · Donations · Non-Profit · Retail · E-Commerce · Sustainability · Circular Economy · Shipping · Supply Chain · Excess Inventory · Company
 
-## APIs
+## LiquiDonate on APIs.io
 
-| API | Docs | Base URL | Auth | Stage |
-|---|---|---|---|---|
-| MagicMatch by LiquiDonate | [docs-magicmatch.liquidonate.com](https://docs-magicmatch.liquidonate.com) | `https://api.liquidonate.com` | `X-LiquiDonate-Key` + `X-LiquiDonate-Secret` | GA (`/v1/`) |
-| ReturnsDirect by LiquiDonate | [docs-returns.liquidonate.com](https://docs-returns.liquidonate.com) | `https://returns.liquidonate.com` | HMAC-SHA256 (`X-Signature` + `X-Shop-Domain`) | Beta |
+Everything profiled for LiquiDonate is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/liquidonate/](https://apis.io/providers/liquidonate/)** — or go straight to one of the APIs or properties below.
 
-Developer hub: [docs.liquidonate.com](https://docs.liquidonate.com). Both APIs are documented as public Postman collections; LiquiDonate publishes no OpenAPI or AsyncAPI of its own.
+### APIs (6)
 
-## Artifacts
+- [LiquiDonate Donate API](https://apis.io/apis/liquidonate/liquidonate-donate-api/) — Bulky, multi-package and pickup-scheduled donations.
+- [LiquiDonate Match API](https://apis.io/apis/liquidonate/liquidonate-match-api/) — Match items to nonprofits.
+- [LiquiDonate Orders API](https://apis.io/apis/liquidonate/liquidonate-orders-api/) — Push order data into ReturnsDirect.
+- [LiquiDonate Retailer API](https://apis.io/apis/liquidonate/liquidonate-retailer-api/) — Retailer account setup and lookup.
+- [LiquiDonate Ship API](https://apis.io/apis/liquidonate/liquidonate-ship-api/) — Purchase donation shipping labels.
+- [LiquiDonate ReturnsDirect By LiquiDonate (Beta) API](https://apis.io/apis/liquidonate/liquidonate-returnsdirect-by-liquidonate-beta-api/) — The ReturnsDirect By LiquiDonate (Beta) API from LiquiDonate — 0 operation(s) for returnsdirect by liquidonate (beta).
 
-- `openapi/` — OpenAPI 3.1 reconstructions of both APIs, built from the published Postman collections and verified against the live hosts
-- `asyncapi/` — AsyncAPI 3.0 for the seven ReturnsDirect return/refund webhook events
-- `overlays/` — API Evangelist enhancements over each spec
-- `vocabulary/` — the 171-term `categoryTypes` item vocabulary MagicMatch matches on
-- `skills/` — five Agent Skills, one per marquee flow
-- `authentication/`, `conventions/`, `errors/`, `lifecycle/`, `conformance/`, `data-model/`, `sandbox/`, `packages/`, `well-known/`, `security/`, `mcp/`, `llms/`, `agentic-access/`
+### Published properties
 
-## Notes for integrators
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- Neither API supports idempotency keys. `matchAndShip`, `ship` and `donate` purchase real postage — do not blind-retry.
-- `estimateMatchAndShip` is the only reversible preview. Pass its `match_uuid` into `matchAndShip` to keep the same nonprofit and rate.
-- After `match`, `attachLabelsToMatch` is mandatory when you buy your own label, or the nonprofit is never notified and no receipt is issued.
-- Furniture, mattresses, items over 50 kg and Damaged-reason returns are excluded from matching — route them to `donate`.
-- ReturnsDirect signatures must be computed over the exact raw request bytes.
+#### AsyncAPI (1)
 
-Status: [status.liquidonate.com](https://status.liquidonate.com/) (Better Stack)
+Event-driven and webhook contracts.
+
+- [ReturnsDirect by LiquiDonate - Return and Refund Events](https://apis.io/asyncapis/liquidonate/liquidonate-returnsdirect-asyncapi/)
+
+#### Event channels (1)
+
+Individual events and webhooks the provider emits.
+
+- [/webhooks/returnsdirect-rms](https://apis.io/channels/liquidonate/webhooks-returnsdirect-rms/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [liquidonate](https://apis.io/servers/liquidonate/liquidonate/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Liquidonate Agentic Access](https://apis.io/agentic-access/liquidonate/liquidonate-agentic-access/)
+
+#### Collections (5)
+
+Postman and Open Collection request collections.
+
+- [MagicMatch by LiquiDonate Donate API](https://apis.io/collections/liquidonate/open-liquidonate-donate-api/)
+- [MagicMatch by LiquiDonate Donate Match API](https://apis.io/collections/liquidonate/open-liquidonate-match-api/)
+- [MagicMatch by LiquiDonate Donate Orders API](https://apis.io/collections/liquidonate/open-liquidonate-orders-api/)
+- [MagicMatch by LiquiDonate Donate Retailer API](https://apis.io/collections/liquidonate/open-liquidonate-retailer-api/)
+- [MagicMatch by LiquiDonate Donate Ship API](https://apis.io/collections/liquidonate/open-liquidonate-ship-api/)
+
+#### Overlays (2)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Liquidonate Magicmatch Overlay](https://apis.io/overlays/liquidonate/liquidonate-magicmatch-overlay/)
+- [Liquidonate Returnsdirect Overlay](https://apis.io/overlays/liquidonate/liquidonate-returnsdirect-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Liquidonate Authentication](https://apis.io/security/liquidonate/liquidonate-authentication/)
+- [Liquidonate Domain Security](https://apis.io/security/liquidonate/liquidonate-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.liquidonate.com)
+- [Documentation](https://docs.liquidonate.com)
+- [Getting started](https://www.liquidonate.com/integrations)
+- [API reference](https://docs.liquidonate.com)
+- [Pricing](https://www.liquidonate.com/pricing)
+- [Sign up](https://app.liquidonate.com/login)
+- [Support](https://help.liquidonate.com)
+- [Blog](https://www.liquidonate.com/blog)
+- [Terms of service](https://www.liquidonate.com/terms-of-service)
+- [Privacy policy](https://www.liquidonate.com/privacy-policy)
+- [Status](https://status.liquidonate.com/)
+
+## API Evangelist rating
+
+**Kin Score 55.0** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 61.9 |
+| Contract governance | 19.7 |
+| Operational transparency | 23.7 |
+| Developer ergonomics | 70.8 |
+| Access clarity | 44.7 |
+
+**Agent readiness 36.4** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | — |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 24.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/liquidonate/](https://apis.io/providers/liquidonate/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for LiquiDonate: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/liquidonate/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
